@@ -109,7 +109,6 @@ export interface GuideState {
   view: ViewId
   completed: Set<number>
   flags: Set<number>
-  hadSavedState: boolean
   selectBuild: (id: string, opts?: { keepLevel?: boolean; view?: ViewId }) => void
   goToLevel: (lvl: number) => void
   advance: () => void
@@ -122,7 +121,6 @@ const emptyProgress = (): BuildProgress => ({ completed: [], flags: [] })
 
 export function useGuideState(): GuideState {
   const [s, setS] = useState<PersistShape>(loadInitial)
-  const [hadSavedState] = useState(() => !!storage.get(STORAGE_KEY))
 
   const { buildId, level, view, progress } = s
   const build = BUILD_BY_ID[buildId] ?? BUILD_BY_ID[DEFAULT_BUILD_ID]
@@ -203,7 +201,6 @@ export function useGuideState(): GuideState {
     view,
     completed,
     flags,
-    hadSavedState,
     selectBuild,
     goToLevel,
     advance,

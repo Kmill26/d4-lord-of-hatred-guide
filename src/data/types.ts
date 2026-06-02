@@ -120,9 +120,11 @@ export interface RoutePhase {
   steps: string[]
 }
 
+export type SystemTag = 'New' | 'Reworked' | 'Returning' | 'Changed'
+
 export interface SystemInfo {
   name: string
-  isNew: boolean
+  tag: SystemTag
   summary: string
   levelingRelevance: string
 }

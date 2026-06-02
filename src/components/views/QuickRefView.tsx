@@ -32,7 +32,7 @@ export function QuickRefView({ state, onSwitchView }: Props) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null
-      if (t && t.closest('input, select, textarea')) return
+      if (t && t.closest('input, select, textarea, [role="tab"]')) return
       if (e.key === 'ArrowRight') goToLevel(level + 1)
       else if (e.key === 'ArrowLeft') goToLevel(level - 1)
       else if (e.key === '/' || e.key.toLowerCase() === 'r') {
@@ -79,6 +79,10 @@ export function QuickRefView({ state, onSwitchView }: Props) {
         </div>
       </div>
 
+      <div className="sr-only" role="status" aria-live="polite">
+        Level {level}: {current.skill}
+      </div>
+
       <div className="quickref-toolbar">
         <label>
           I’m level
@@ -106,7 +110,10 @@ export function QuickRefView({ state, onSwitchView }: Props) {
         <button type="button" className="ctrl-btn" onClick={() => window.print()}>
           Print
         </button>
-        <label style={{ marginLeft: 'auto' }}>
+        <span className="kbd-hint" style={{ marginLeft: 'auto' }}>
+          Keys: ←→ level · R or / for guide
+        </span>
+        <label>
           <input
             type="checkbox"
             checked={milestonesOnly}
@@ -142,7 +149,20 @@ export function QuickRefView({ state, onSwitchView }: Props) {
                   onClick={() => goToLevel(r.level)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <td className="lvl">{r.level}</td>
+                  <td className="lvl">
+                    <button
+                      type="button"
+                      className="btn-reset"
+                      style={{ fontFamily: 'Cinzel, serif', fontWeight: 900, color: 'var(--gold)', width: 'auto' }}
+                      aria-label={`Go to level ${r.level}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        goToLevel(r.level)
+                      }}
+                    >
+                      {r.level}
+                    </button>
+                  </td>
                   <td className="skill">
                     {r.major && <span className="star">★</span>}
                     {r.skill}

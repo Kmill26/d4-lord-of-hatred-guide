@@ -11,7 +11,6 @@ import type { Build } from './types'
  * Tiers are leveling-speed tiers (S/A/B), not endgame tiers.
  */
 
-const S = (label: string): string => label // tiny readability helper for tier labels
 
 export const BUILDS: Build[] = [
   // ───────────────────────────── ROGUE ─────────────────────────────
@@ -20,7 +19,7 @@ export const BUILDS: Build[] = [
     name: 'Dance of Knives',
     className: 'Rogue',
     tier: 'S',
-    tierLabel: S('S-Tier · Fastest Overall Leveler'),
+    tierLabel: 'S-Tier · Fastest Overall Leveler',
     selection: 'Specialization: Combo Points → Inner Sight',
     playstyle:
       'The #1 fastest leveler in Season 13. Dance of Knives is now a Core skill that costs Energy (the old charge system is gone). Channel a spinning storm of daggers while zipping with Blade Shift and Dark Shroud — together they break the ~200% move-speed cap. Spin tight circles around packs to sustain Energy while an imbuement covers the screen.',
@@ -34,8 +33,8 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Specialization (Combo Points) + Star Shards', note: "Complete 'True Potential' to unlock Specialization. Star Shards makes your imbuement hit every target on screen.", major: true },
       { level: 20, skill: 'Switch to Inner Sight + Dark Shroud (Overflow)', note: 'Swap spec to Inner Sight for effortless Core spam; pick up Dark Shroud Overflow for Energy regen + move speed.', respec: true },
       { level: 30, skill: 'Shadow Clone (Ultimate)', note: 'Finalize Shadow Clone as your Ultimate — the full loop is complete.' },
-      { level: 45, skill: '★ Capstone Dungeon (Havezar)', note: 'Run the first capstone after the campaign for bonus skill points; bump difficulty.', major: true },
-      { level: 60, skill: '★ Second Capstone (Hellish Ascent) → The Pit', note: 'Opens The Pit, the path to Torment difficulties and Paragon.', major: true },
+      { level: 45, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Run the first capstone after the campaign for bonus skill points; bump difficulty.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Opens The Pit, the path to Torment difficulties and Paragon.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Begin Paragon; pivot to the Dance of Knives (Cold) endgame build.', major: true },
     ],
     gear: [
@@ -56,7 +55,7 @@ export const BUILDS: Build[] = [
     name: 'Twisting Blades',
     className: 'Rogue',
     tier: 'S',
-    tierLabel: S('S-Tier · Armored Blade Tornado'),
+    tierLabel: 'S-Tier · Armored Blade Tornado',
     selection: 'Specialization: Combo Points → Inner Sight',
     playstyle:
       'A super-fast, mobile melee classic. Hit a pack with Twisting Blades, then immediately reposition with Dash / Shadow Step so the blades return ~1.5s later and slice everything in their path. Tankier-feeling than Dance of Knives and excellent against bosses; smaller AoE and the delayed return demand more active play.',
@@ -68,8 +67,8 @@ export const BUILDS: Build[] = [
       { level: 1, skill: 'Blade Shift', note: 'Basic skill; take Twisting Blades as your Core by ~L2.' },
       { level: 15, skill: '★ Specialization (Combo Points)', note: "Unlock Specialization via 'True Potential'; build Basic up to 3× to empower the next Core.", major: true },
       { level: 20, skill: 'Switch to Inner Sight + mobility + Imbuement', note: 'Swap to Inner Sight for Energy management; add Dash/Shadow Step and Shadow or Poison Imbuement (one active at a time).', respec: true },
-      { level: 45, skill: '★ Capstone Dungeon (Havezar)', note: 'First capstone after the campaign for skill points.', major: true },
-      { level: 60, skill: '★ Second Capstone (Hellish Ascent) → The Pit', note: 'Unlocks the Pit / Torment path.', major: true },
+      { level: 45, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'First capstone after the campaign for skill points.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Unlocks the Pit / Torment path.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Pivot toward the Twisting Blades endgame build (The Maestro / Death’s Pavane).', major: true },
     ],
     gear: [
@@ -88,7 +87,7 @@ export const BUILDS: Build[] = [
     name: 'Barrage',
     className: 'Rogue',
     tier: 'S',
-    tierLabel: S('S-Tier · Safe Ranged Archer'),
+    tierLabel: 'S-Tier · Safe Ranged Archer',
     selection: 'Specialization: Combo Points → Inner Sight',
     playstyle:
       'The easiest of the three top Rogue builds to pilot. Spam Barrage with the Multishot enhancement to blanket the whole screen with arrow volleys while staying at range. Heartseeker generates resource, Dark Shroud Overflow regens Energy + move speed, Dash repositions. Massive AoE that hits nearly everything on screen.',
@@ -101,8 +100,8 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Specialization (Combo Points)', note: 'Unlock Specialization; Combo Points improves Energy economy.', major: true },
       { level: 20, skill: 'Switch to Inner Sight + Imbuements', note: 'Inner Sight (4s) for effortless Barrage spam; add Shadow + Poison Imbuement (one active at a time).', respec: true },
       { level: 30, skill: 'Loop complete', note: 'Key synergies unlocked; fill primary ability ranks then utility.' },
-      { level: 45, skill: '★ Capstone Dungeon (Havezar)', note: 'First capstone for skill points.', major: true },
-      { level: 60, skill: '★ Second Capstone (Hellish Ascent) → The Pit', note: 'Unlocks Pit / Torment path.', major: true },
+      { level: 45, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'First capstone for skill points.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Unlocks Pit / Torment path.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Pivot toward a Barrage or Rapid Fire ranged endgame build.', major: true },
     ],
     gear: [
@@ -123,7 +122,7 @@ export const BUILDS: Build[] = [
     name: 'Frenzy Throw',
     className: 'Barbarian',
     tier: 'S',
-    tierLabel: S('S-Tier · Top Barbarian Leveler'),
+    tierLabel: 'S-Tier · Top Barbarian Leveler',
     playstyle:
       'A ranged hit-and-run barbarian. Throw spinning Frenzy axes that pierce groups and shatter into shrapnel, stacking Attack Speed (and Ferocity via an upgrade). Spam Rallying Cry constantly for move speed and to summon Madawc (an Ancient). Stay at range, kite packs, burst elites.',
     feelsLike: 'A Diablo II double-throw barb — axes fly downrange while you stack speed and kite.',
@@ -155,7 +154,7 @@ export const BUILDS: Build[] = [
     name: 'Whirlwind',
     className: 'Barbarian',
     tier: 'A',
-    tierLabel: S('A-Tier · Classic Spin-to-Win'),
+    tierLabel: 'A-Tier · Classic Spin-to-Win',
     playstyle:
       'Hold Whirlwind and walk through packs. In Lord of Hatred, Whirlwind FREELY spawns Dust Devils by itself starting at level 15 (no aspect needed) — the beloved Dust Devils playstyle, far earlier. Lunging Strike generates Fury and closes gaps; War Cry and Challenging Shout buff/debuff. Weak single-target until aspects fill in.',
     feelsLike: 'A permanent dust-tornado vortex around you; run into a pack and hold the button.',
@@ -186,7 +185,7 @@ export const BUILDS: Build[] = [
     name: 'Hammer of the Ancients',
     className: 'Barbarian',
     tier: 'B',
-    tierLabel: S('B-Tier · Slam Bruiser'),
+    tierLabel: 'B-Tier · Slam Bruiser',
     playstyle:
       'A slam-focused melee alternative. Alternate Lunging Strike (Fury) with Hammer of the Ancients (damage) — roughly 2:1 early, easing to 1:1 as aspects come online. Iron Skin, Rallying Cry and Ground Stomp keep you alive; Call of the Ancients / Wrath of the Berserker is the ultimate.',
     feelsLike: 'Big overhead slams that crater the ground — heavy, satisfying, single-target-leaning.',
@@ -219,7 +218,7 @@ export const BUILDS: Build[] = [
     name: 'Static Field Blizzard',
     className: 'Sorcerer',
     tier: 'S',
-    tierLabel: S('S-Tier · Safest, Fastest Caster'),
+    tierLabel: 'S-Tier · Safest, Fastest Caster',
     playstyle:
       "Open with Fireball/Arc Lash, then the moment you have Blizzard just carpet packs with it and watch them vanish. Teleport to kite, Frost Nova for Vulnerable + mana, Ice Armor for a barrier. At level 38 you convert Blizzard into a Shock skill via the Static Field variant — fixing mana and ramping damage hard. The most brain-off Sorcerer level path.",
     feelsLike: 'Kite backward, leave blizzards and shock fields on the floor, watch everything shatter.',
@@ -234,7 +233,7 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Enchantment Slot 1 (Legacy of the Magi)', note: 'Assign Ice Armor (free barrier + mana on potion use).', major: true },
       { level: 30, skill: '★ Enchantment Slot 2', note: 'Assign Frost Nova to auto-apply Vulnerable and generate Mana.', major: true },
       { level: 38, skill: '★ Blizzard: Static Field (PIVOT)', note: 'Converts Blizzard into a Shock DoT skill — solves mana. Drop Arc Lash, add Unstable Currents as the boss ultimate.', major: true, respec: true },
-      { level: 50, skill: '★ Capstone / difficulty bump', note: 'Push World Tier / Torment progression as kills stay fast.', major: true },
+      { level: 50, skill: '★ Capstone / difficulty bump', note: 'Push difficulty / Torment progression as kills stay fast.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Begin Paragon; transition to the Static Field endgame build.', major: true },
     ],
     gear: [
@@ -254,7 +253,7 @@ export const BUILDS: Build[] = [
     name: 'Charged Bolts',
     className: 'Sorcerer',
     tier: 'A',
-    tierLabel: S('A-Tier · Best Season-Start Damage'),
+    tierLabel: 'A-Tier · Best Season-Start Damage',
     playstyle:
       'The best raw season-start leveler — highest early damage with zero gear. Charged Bolts shotguns close targets and pierces through enemies to clear the screen. Spam it, Teleport to reposition, Frost Nova for Vulnerable, Ice Armor for defense, Unstable Currents for boss burst (it also auto-triggers Ball Lightning without a skill-bar slot). Pivot to Blizzard ~L38 or ride it to 70.',
     feelsLike: 'Bolts fan out and pierce in a cone; lightning everywhere as you blink around.',
@@ -288,7 +287,7 @@ export const BUILDS: Build[] = [
     name: 'Firewall / Fireball (Burn)',
     className: 'Sorcerer',
     tier: 'A',
-    tierLabel: S('A-Tier · Fire DoT Alternative'),
+    tierLabel: 'A-Tier · Fire DoT Alternative',
     playstyle:
       'A fire-focused alternative. Fireball launches fiery AoE projectiles; Firewall lays burning lanes that stack big damage-over-time. LoH reworked fire uniques and added a fire-converted Frozen Orb option, so Burn scales smoothly from low gear. Slightly clunkier early than Charged Bolts/Blizzard (hence A-tier), but a fun fire fantasy.',
     feelsLike: 'Drop burning walls and lob fireballs; pull packs into the flames and let them cook.',
@@ -319,7 +318,7 @@ export const BUILDS: Build[] = [
     name: 'Minion / Summoner',
     className: 'Necromancer',
     tier: 'S',
-    tierLabel: S('S-Tier · Easiest Army Leveler'),
+    tierLabel: 'S-Tier · Easiest Army Leveler',
     playstyle:
       'The smoothest, most forgiving leveler in the game: command Skeletal Warriors + Skeletal Mages + a Golem, curse with Iron Maiden, and let minions do the work while you reposition. Lowest mechanical demand, minimal gear dependence, and it transitions straight into a strong endgame minion build.',
     feelsLike: 'Walk behind a wall of 20+ skeletons; point at corpses and things explode. Nearly brain-off.',
@@ -354,7 +353,7 @@ export const BUILDS: Build[] = [
     name: 'Blood Surge',
     className: 'Necromancer',
     tier: 'A',
-    tierLabel: S('A-Tier · Overpower AoE'),
+    tierLabel: 'A-Tier · Overpower AoE',
     playstyle:
       "Spam Hemorrhage to build Overpower, then unleash Blood Surge with the 'You And What Army?' upgrade for screen-wide red AoE amplified by your minions. LoH made Overpower strong again, so Blood scales hard. A small skeleton army provides sustain and damage.",
     feelsLike: 'Pulse huge red shockwaves out of yourself; whole screens of enemies pop at once.',
@@ -387,7 +386,7 @@ export const BUILDS: Build[] = [
     name: 'Blood Lance',
     className: 'Necromancer',
     tier: 'B',
-    tierLabel: S('B-Tier · Direct-Combat Blood'),
+    tierLabel: 'B-Tier · Direct-Combat Blood',
     playstyle:
       'A direct-combat alternative to minions. Throw piercing Blood Lances that bounce between lanced enemies; uses the new LoH Blood Orb generation (Gore Quills) and Defender skeletons that can form Blood Orbs. Good density clearing with solved mobility (Sever), but needs some crafting for essence sustain.',
     feelsLike: 'Hurl red spears that chain between marked foes; weave in skeletons for sustain.',
@@ -421,7 +420,7 @@ export const BUILDS: Build[] = [
     name: 'Shield of Retribution (Thorns)',
     className: 'Paladin',
     tier: 'S',
-    tierLabel: S('S-Tier · Fastest Paladin'),
+    tierLabel: 'S-Tier · Fastest Paladin',
     selection: 'Oath: Juggernaut',
     playstyle:
       'A Juggernaut-Oath Thorns build. Throw a slow Blessed Shield (upgraded to Shield of Retribution at L32) that pulses Thorns damage several times before exploding; nearly all damage scales off Thorns, not weapon damage. Tanky, AoE-heavy, melts packs, very forgiving — the top-rated Paladin leveler.',
@@ -434,7 +433,7 @@ export const BUILDS: Build[] = [
       { level: 2, skill: 'Blessed Shield', note: 'Core spender; use the Shield of Justice upgrade until L32.' },
       { level: 15, skill: '★ Oath: Juggernaut', note: 'Class mechanic unlocks automatically — pick Juggernaut to build/spend Resolve for the damage buff and ~20% damage reduction.', major: true },
       { level: 32, skill: '★ Shield of Retribution', note: 'Swap from Shield of Justice to Shield of Retribution immediately — the build’s namesake power spike.', major: true, respec: true },
-      { level: 50, skill: '★ Cathedral of Light capstone', note: 'Run on World Tier 2 (Veteran) after the campaign to unlock the next difficulty; enemies are fixed at level 50.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Clear the capstone after the campaign to unlock the next difficulty tier; push difficulty as kills stay fast.', major: true },
       { level: 60, skill: '★ Strongholds / second capstone', note: 'Clean up Strongholds and run the next capstone; upgrade gear for the difficulty jump.', major: true },
       { level: 70, skill: '★ Torment 1 transition', note: 'Enter Torment/endgame; pivot toward endgame Shield of Retribution or a Support Paladin.', major: true },
     ],
@@ -455,7 +454,7 @@ export const BUILDS: Build[] = [
     name: 'Blessed Hammer (Hammerdin)',
     className: 'Paladin',
     tier: 'A',
-    tierLabel: S('A-Tier · Hammerdin'),
+    tierLabel: 'A-Tier · Hammerdin',
     selection: 'Oath: Disciple (Arbiter Form)',
     playstyle:
       'A Disciple-Oath build. Spin Blessed Hammers through packs while maintaining Arbiter Form via cooldown skills for a large persistent damage buff. The iconic Diablo II Hammerdin fantasy — strong and steady through the whole campaign; scales hard once Herald’s Morningstar drops.',
@@ -470,7 +469,7 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Oath: Disciple', note: 'Class mechanic unlocks automatically — pick Disciple; casting a Disciple cooldown skill grants Arbiter Form (~4.5s, ~50% increased damage).', major: true },
       { level: 18, skill: 'Condemn', note: 'AoE detonation and Arbiter-Form extension on elites.' },
       { level: 35, skill: 'Falling Star', note: 'Mobility + a Disciple cooldown for Arbiter uptime.' },
-      { level: 50, skill: '★ Cathedral of Light capstone', note: 'Run on WT2/Veteran after the campaign to unlock the next difficulty.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Clear the capstone after the campaign to unlock the next difficulty tier.', major: true },
       { level: 70, skill: '★ Torment 1 / Herald’s Morningstar', note: 'Endgame transition; Herald’s Morningstar massively amplifies Blessed Hammer once acquired.', major: true },
     ],
     gear: [
@@ -488,7 +487,7 @@ export const BUILDS: Build[] = [
     name: 'Zeal (Zealspin)',
     className: 'Paladin',
     tier: 'B',
-    tierLabel: S('B-Tier · Crit Buzzsaw Melee'),
+    tierLabel: 'B-Tier · Crit Buzzsaw Melee',
     selection: 'Oath: Zealot',
     playstyle:
       'A Zealot-Oath melee build. Advance generates Faith; spam Zeal as your spender. Critical Strikes consume Fervor stacks to make Zeal hit additional times, ramping into a spinning buzzsaw of strikes. Simple, flashy, and satisfying — but more positioning-dependent than the Thorns build while leveling.',
@@ -501,7 +500,7 @@ export const BUILDS: Build[] = [
       { level: 2, skill: 'Zeal', note: 'Core spender; hits multiple times and ramps on consecutive attacks.' },
       { level: 15, skill: '★ Oath: Zealot', note: 'Class mechanic unlocks automatically — Zealotry hits grant Fervor, and Crits repeat the skill once per Fervor stack.', major: true },
       { level: 25, skill: 'Fanaticism Aura', note: 'Attack speed + crit aura strongly synergizes with the Fervor crit-repeat loop.' },
-      { level: 50, skill: '★ Cathedral of Light capstone', note: 'Run on WT2/Veteran after the campaign to unlock the next difficulty.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Clear the capstone after the campaign to unlock the next difficulty tier.', major: true },
       { level: 70, skill: '★ Torment 1 transition', note: 'Endgame transition into the Zealspin endgame variant.', major: true },
     ],
     gear: [
@@ -521,7 +520,7 @@ export const BUILDS: Build[] = [
     name: 'Dread Claws',
     className: 'Warlock',
     tier: 'A',
-    tierLabel: S('A-Tier · Best Warlock AoE'),
+    tierLabel: 'A-Tier · Best Warlock AoE',
     selection: 'Soul Shard: Mastermind (binds Laalish)',
     playstyle:
       'A simple-to-play AoE powerhouse with the best endgame scaling of the Warlock leveling options. Spam Dread Claws and place your Rampage Greater Demon inside packs so claws hit twice; melt elites/bosses with Hellion Sting (Eviscerate). Mastermind’s Shadowform lets you recast without breaking stealth. Frontal cones early; at 15 (Encircling Terror) they become circular AoE around you and your demon.',
@@ -532,7 +531,7 @@ export const BUILDS: Build[] = [
     milestones: [
       { level: 3, skill: 'Dread Claws', note: 'Core AoE spender — your main damage skill.' },
       { level: 4, skill: 'Nether Step', note: 'Mobility / Shadowform enabler.' },
-      { level: 8, skill: 'Rampage', note: 'First Greater Demon (Archfiend); place inside packs for double Dread Claws hits.' },
+      { level: 8, skill: 'Rampage', note: 'First Greater Demon (Abyssal Titan); place inside packs for double Dread Claws hits.' },
       { level: 9, skill: 'Hellion Sting (Eviscerate)', note: 'Single-target / elite-melter upgrade — lock your target.' },
       { level: 14, skill: 'Hellion Sting (Tail Spikes)', note: 'Hold to shred elites; synergizes with Eviscerate.' },
       { level: 15, skill: '★ Soul Shard: Mastermind + Encircling Terror', note: "Class quest 'Disciple of the Forbidden' unlocks Soul Shards. Encircling Terror converts Dread Claws to circular AoE.", major: true },
@@ -540,7 +539,7 @@ export const BUILDS: Build[] = [
       { level: 30, skill: '★ Fragment Bonus (Blasphemous Fragment)', note: 'Upgrades the Mastermind shard.', major: true },
       { level: 34, skill: 'RESPEC → Command Fallen + Dark Prison', note: 'Drop Hellion Sting/Sigil; Command Fallen for Wrath/Dominance generation, Dark Prison for defense.', respec: true },
       { level: 40, skill: 'RESPEC → Metamorphosis (Ultimate)', note: 'Drop Dark Prison; Metamorphosis enables stealth-compatible casting and endgame scaling.', respec: true },
-      { level: 50, skill: '★ Capstone (Cathedral of Light)', note: 'Push difficulty / World Tier for better loot.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Push difficulty for better loot.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Begin Paragon; pick up Litany of Sable + Deeper Shadows for the endgame Dread Claws build.', major: true },
     ],
     gear: [
@@ -562,7 +561,7 @@ export const BUILDS: Build[] = [
     name: 'Minion Warlock',
     className: 'Warlock',
     tier: 'A',
-    tierLabel: S('A-Tier · Safest / Fastest Warlock'),
+    tierLabel: 'A-Tier · Safest / Fastest Warlock',
     selection: 'Soul Shard: Legion (binds Ae’grom)',
     playstyle:
       'The safest and among the fastest Warlock leveling routes. Build a lesser-demon swarm via Legion Shard and Sigil of Summons, spam Bombardment for AoE, and command your Greater Demon (Rampage). You stay back-line while the demon army clears packs — very forgiving. Command Fallen handles early resource generation and is dropped once your demons sustain.',
@@ -573,13 +572,13 @@ export const BUILDS: Build[] = [
     milestones: [
       { level: 3, skill: 'Bombardment', note: 'Core AoE damage spender.' },
       { level: 4, skill: 'Nether Step', note: 'Mobility.' },
-      { level: 8, skill: 'Rampage', note: 'First Greater Demon (Archfiend).' },
+      { level: 8, skill: 'Rampage', note: 'First Greater Demon (Abyssal Titan).' },
       { level: 13, skill: 'Sigil of Summons', note: 'Spawns Lesser Demons (ritual / summon engine).' },
       { level: 15, skill: '★ Soul Shard: Legion', note: 'Class quest unlocks Soul Shards; Legion = persistent demon companion + lesser-demon swarm synergy.', major: true },
       { level: 19, skill: 'Fiend of Abaddon (Ultimate)', note: 'Boss / elite burst (cooldown-gated).' },
       { level: 30, skill: '★ Fragment Bonus (Sacrificial Fragment)', note: 'Grants Unstoppable; upgrades the Legion shard.', major: true },
       { level: 34, skill: 'Drop Command Fallen (optional)', note: 'Once Rampage + gear sustain resources; keep it if you have issues.' },
-      { level: 50, skill: '★ Capstone (Cathedral of Light)', note: 'Harder content / better loot.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Harder content / better loot.', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Paragon; transition to a specialized endgame build.', major: true },
     ],
     gear: [
@@ -598,7 +597,7 @@ export const BUILDS: Build[] = [
     name: 'Eviscerate Warlock',
     className: 'Warlock',
     tier: 'B',
-    tierLabel: S('B-Tier · Bleed / Single-Target'),
+    tierLabel: 'B-Tier · Bleed / Single-Target',
     selection: 'Soul Shard: Legion (binds Ae’grom)',
     playstyle:
       'A Bleed/DoT ramp build with insane single-target. Apply Eviscerate (Bleed) from many sources — Hellion Sting (Eviscerate + Tail Spikes), Rampage (Elite Eviscerate), and your lesser-demon army — to melt elites and bosses. Mediocre AoE, so it leans on Bombardment/Rampage for pack clear. A solid third pick if you find its enabling uniques.',
@@ -635,7 +634,7 @@ export const BUILDS: Build[] = [
     name: 'Quill Volley (Eagle)',
     className: 'Spiritborn',
     tier: 'S',
-    tierLabel: S('S-Tier · Best Spiritborn Leveler'),
+    tierLabel: 'S-Tier · Best Spiritborn Leveler',
     selection: 'Spirit Hall: Eagle (primary & secondary)',
     playstyle:
       'A two-stage Eagle build: generate Vigor with Thunderspike, then spend it spamming Quill Volley for a fan of piercing quills boosted by Storm Feathers. Evade and Eagle skills loose lightning Storm Feathers that apply Vulnerable. The top-rated Spiritborn leveler — fast clear, ranged-feeling safety, scales straight into endgame.',
@@ -648,8 +647,8 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Spirit Hall: Eagle (primary)', note: "Mechanic unlock via 'Sacred Hunt'. Pick Eagle — Storm Feathers + Vulnerable on Eagle-skill cast / Evade.", major: true },
       { level: 19, skill: 'The Hunter (Ultimate)', note: 'Ultimate slot opens for burst + Ferocity.' },
       { level: 30, skill: '★ Spirit Hall: Eagle (secondary)', note: 'Secondary spirit auto-unlocks; take Eagle again for +crit chance and Vulnerable damage amp.', major: true },
-      { level: 50, skill: '★ First Capstone Dungeon', note: 'Unlocks higher difficulty tier; bonus progression.', major: true },
-      { level: 60, skill: '★ Vault of the Crucible (2nd Capstone)', note: 'Run on Torment difficulty; opens Pit access.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Unlocks higher difficulty tier; bonus progression.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Opens The Pit (the path to Torment difficulties).', major: true },
       { level: 70, skill: '★ Pit Tier 10 → Torment 1', note: 'Begin Paragon; transition to the endgame Eagle build. No mid-leveling respec needed.', major: true },
     ],
     gear: [
@@ -670,7 +669,7 @@ export const BUILDS: Build[] = [
     name: 'Crushing Hand',
     className: 'Spiritborn',
     tier: 'A',
-    tierLabel: S('A-Tier · Spectral-Fist Slammer'),
+    tierLabel: 'A-Tier · Spectral-Fist Slammer',
     selection: 'Spirit Hall: Eagle → optional Gorilla at 30',
     playstyle:
       'A spectral-fist slammer. Withering Fist is the basic (heal + short dash), Crushing Hand the main spender (Unrelenting Assault grants barrier + Resolve). Vortex groups packs; Ravager/Toxic Skin/Armored Hide sustain. Start Eagle for movement + Vulnerable, then at 30 optionally lean into a tankier Gorilla/“GorFist” identity. A strong AoE speedfarmer for dense content.',
@@ -683,8 +682,8 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Spirit Hall: Eagle (primary)', note: 'Mechanic unlock — Eagle for 40% move speed and Storm-Feather Vulnerable while leveling.', major: true },
       { level: 19, skill: 'Ultimate available', note: 'The Seeker / The Hunter slot opens.' },
       { level: 30, skill: '★ Secondary Spirit + “GorFist” option', note: 'Withering Fist can convert via Fist of the Forest (Gorilla) for extra healing/Weaken; some guides keep double-Eagle.', major: true },
-      { level: 50, skill: '★ First Capstone Dungeon', note: 'Difficulty unlock.', major: true },
-      { level: 60, skill: '★ Second Capstone (Torment)', note: 'Pit access.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Difficulty unlock.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Pit access.', major: true },
       { level: 70, skill: '★ Torment 1 transition', note: 'Paragon begins; pivot to endgame.', major: true },
     ],
     gear: [
@@ -705,7 +704,7 @@ export const BUILDS: Build[] = [
     name: 'Payback (Eagle / Jaguar)',
     className: 'Spiritborn',
     tier: 'A',
-    tierLabel: S('A-Tier · Counter-Attack Bruiser'),
+    tierLabel: 'A-Tier · Counter-Attack Bruiser',
     selection: 'Spirit Hall: Eagle (primary) + Jaguar (secondary)',
     playstyle:
       'A counter-attack bruiser. Payback is the main spender; The Hunter, Ravager, Armored Hide and Scourge are cast on cooldown, with Thunderspike as a free Vigor basic. Primary Eagle (Vulnerable + move speed) with secondary Jaguar (higher max Ferocity, stacks on kills/boss hits) for ramping attack speed. Aggressive, melee-range, snappy.',
@@ -718,8 +717,8 @@ export const BUILDS: Build[] = [
       { level: 15, skill: '★ Spirit Hall: Eagle (primary)', note: 'Mechanic unlock — Vulnerable application + movement.', major: true },
       { level: 19, skill: 'The Hunter (Ultimate)', note: 'Burst + Ferocity generation.' },
       { level: 30, skill: '★ Spirit Hall: Jaguar (secondary)', note: 'Raises max Ferocity and generates stacks on kills / boss damage for ramping attack speed.', major: true },
-      { level: 50, skill: '★ First Capstone Dungeon', note: 'Difficulty unlock.', major: true },
-      { level: 60, skill: '★ Second Capstone (Torment)', note: 'Pit access.', major: true },
+      { level: 50, skill: '★ Capstone Dungeon (Vault of the Crucible)', note: 'Difficulty unlock.', major: true },
+      { level: 60, skill: '★ Second Capstone (Hellish Descent) → The Pit', note: 'Pit access.', major: true },
       { level: 70, skill: '★ Torment 1 transition', note: 'Paragon; move to endgame.', major: true },
     ],
     gear: [
@@ -742,7 +741,7 @@ export const BUILDS: Build[] = [
     name: 'Lightning Storm',
     className: 'Druid',
     tier: 'A',
-    tierLabel: S('A-Tier · Best Druid Leveler'),
+    tierLabel: 'A-Tier · Best Druid Leveler',
     playstyle:
       'A channel-and-walk storm caster. Hold Lightning Storm to rain bolts on everything nearby while Cyclone Armor and Earthen Bulwark keep you alive; Cataclysm is the boss/elite nuke. Works from level 1 to 70 with no specific gear requirement — the most beginner-friendly, self-sufficient Druid leveler. Run it largely in Human form or shift Lightning into Werewolf via LoH Shifting Nodes.',
     feelsLike: 'A permanent thundercloud follows you and shocks everything nearby as you walk.',
@@ -775,7 +774,7 @@ export const BUILDS: Build[] = [
     name: 'Pulverize',
     className: 'Druid',
     tier: 'B',
-    tierLabel: S('B-Tier · Werebear Slammer'),
+    tierLabel: 'B-Tier · Werebear Slammer',
     playstyle:
       'A werebear melee/mid-range slammer. Pulverize sends earth shockwaves through packs for huge AoE bursts while Earthen Bulwark, Cyclone Armor and Poison Creeper keep you very tanky. Simple and durable; main weaknesses are low mobility and early Spirit management. Pivots cleaner once you respec Storm Strike into Claw (~L30) for mobility.',
     feelsLike: 'Slam the ground as a werebear and send shockwaves ripping through packs.',
@@ -807,7 +806,7 @@ export const BUILDS: Build[] = [
     name: 'Shred',
     className: 'Druid',
     tier: 'B',
-    tierLabel: S('B-Tier · Werewolf Mobility'),
+    tierLabel: 'B-Tier · Werewolf Mobility',
     playstyle:
       'A high-mobility werewolf that dashes between enemies with cleaving claw combos. Strong survivability and the best mobility of the Druid levelers, but suffers from low early AoE and a long ultimate cooldown. Starts slow, spikes hard once Roundhouse comes online at 15, then pivots into a hybrid full-Storm build via Storm Shred around level 32.',
     feelsLike: 'Dash between enemies as a werewolf, cleaving with claws; very mobile, melee-range.',

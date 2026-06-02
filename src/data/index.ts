@@ -1,7 +1,7 @@
 export * from './types'
 export { CLASSES, CLASS_ORDER, classPortrait } from './classes'
 export { BUILDS, BUILD_BY_ID, DEFAULT_BUILD_ID, LEVEL_CAP } from './builds'
-export { TIER_LIST, TIER_ORDER, TIER_LIST_NOTE } from './tierList'
+export { TIER_LIST, TIER_ORDER, TIER_LIST_NOTE, TIER_RANK, byTier } from './tierList'
 export { MERCENARIES, MERC_NOTE } from './mercenaries'
 export { ROUTE, ROUTE_NOTE, RESPEC_ADVICE } from './strategy'
 export type { RespecAdvice } from './strategy'

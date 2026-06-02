@@ -1,4 +1,4 @@
-import type { TierTable } from './types'
+import type { Tier, TierTable } from './types'
 
 /**
  * Season 13 (Lord of Hatred) LEVELING-speed tier list (S/A/B).
@@ -41,6 +41,15 @@ export const TIER_LIST: TierTable = {
 }
 
 export const TIER_ORDER = ['S', 'A', 'B'] as const
+
+/** Sort weight for a tier (S best). Single source of truth for tier ordering. */
+export const TIER_RANK: Record<Tier, number> = Object.fromEntries(
+  TIER_ORDER.map((t, i) => [t, i]),
+) as Record<Tier, number>
+
+/** Comparator: sort builds best-tier-first. */
+export const byTier = <T extends { tier: Tier }>(a: T, b: T): number =>
+  TIER_RANK[a.tier] - TIER_RANK[b.tier]
 
 export const TIER_LIST_NOTE =
   'Leveling-speed tiers for Season 13 (Season of Reckoning), as of the 3.0.3 patch (May 2026). ' +

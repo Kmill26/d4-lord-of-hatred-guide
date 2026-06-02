@@ -1,14 +1,11 @@
 import { BUILDS } from '../../data/builds'
 import { CLASSES, CLASS_ORDER } from '../../data/classes'
+import { byTier } from '../../data/tierList'
 import type { Build, ClassName } from '../../data/types'
 import { ClassPortrait, TierBadge } from '../shared'
 
-const TIER_RANK = { S: 0, A: 1, B: 2 } as const
-
 function bestBuildForClass(cn: ClassName): Build | undefined {
-  return BUILDS.filter((b) => b.className === cn).sort(
-    (a, b) => TIER_RANK[a.tier] - TIER_RANK[b.tier],
-  )[0]
+  return BUILDS.filter((b) => b.className === cn).sort(byTier)[0]
 }
 
 interface Props {

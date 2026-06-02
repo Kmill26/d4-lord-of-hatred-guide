@@ -15,8 +15,10 @@ export function SystemsView() {
         <div className="systems-grid">
           {SYSTEMS.map((s) => (
             <div className="system-card" key={s.name}>
-              {s.isNew && <span className="new-badge">NEW</span>}
-              <h3>{s.name}</h3>
+              <div className="system-head">
+                <h3>{s.name}</h3>
+                <span className={`system-tag tag-${s.tag.toLowerCase()}`}>{s.tag}</span>
+              </div>
               <p>{s.summary}</p>
               <p className="relevance">{s.levelingRelevance}</p>
             </div>

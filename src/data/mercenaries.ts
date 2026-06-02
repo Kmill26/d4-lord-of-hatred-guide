@@ -25,7 +25,7 @@ export const MERCENARIES: Mercenary[] = [
   },
   {
     name: 'Subo',
-    archetype: 'Drunken Archer (ranged)',
+    archetype: 'The Bounty Hunter (ranged)',
     reinforcement: 'Seeker',
     role: 'Ranged damage and pulls; reveals/marks targets',
     levelingNote: 'Good ranged supplement; less impactful than Raheir or Varyana for raw leveling speed.',

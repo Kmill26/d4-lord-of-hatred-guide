@@ -27,10 +27,11 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null
-      if (t && t.closest('input, select, textarea, [contenteditable="true"]')) return
+      // Don't hijack typing, or arrow/tab navigation while a tab button is focused.
+      if (t && t.closest('input, select, textarea, [contenteditable="true"], [role="tab"]')) return
       const k = e.key.toLowerCase()
       if (e.key === ' ' || e.key === 'Enter') {
-        if (t && t.closest('button, a, [role="tab"]')) return // let the control handle it
+        if (t && t.closest('button, a')) return // let the control handle it
         e.preventDefault()
         advance()
       } else if (e.key === 'ArrowRight') {
@@ -62,7 +63,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
       for (let i = 0; i < 5; i++) {
         const em = document.createElement('div')
         em.className = 'ember'
-        em.style.left = `${(i * 23 + level * 7) % 100}%`
+        em.style.left = `${(i * 23 + 9) % 100}%`
         em.style.bottom = `${(i * 13) % 30}%`
         em.style.animationDelay = `${-(i * 0.5)}s`
         layer.appendChild(em)
@@ -75,7 +76,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
       window.clearInterval(timer)
       layer.replaceChildren()
     }
-  }, [reducedMotion, level])
+  }, [reducedMotion])
 
   const copyCurrent = async () => {
     try {
@@ -105,6 +106,13 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
           prioritize. <strong>Space</strong> / <strong>→</strong> advance · <strong>M</strong> next ★ ·{' '}
           <strong>R</strong> quick-ref · <strong>/</strong> full list.
         </p>
+
+        <h2 className="sr-only">
+          Point guide — {build.className} {build.name}, level {level}
+        </h2>
+        <div className="sr-only" role="status" aria-live="polite">
+          Level {level}: {current.skill}. {current.note}
+        </div>
 
         <div className="guide-layout">
           {/* What this build looks like */}
@@ -187,7 +195,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
             <div className="level-progress-strip">
               <div className="row">
                 <span>LEVEL {level}</span>
-                <span>{level >= LEVEL_CAP ? 'MAX LEVEL' : `${levelPct}% TO LEVEL ${level + 1}`}</span>
+                <span>{level >= LEVEL_CAP ? 'MAX LEVEL' : `${levelPct}% TO LEVEL ${LEVEL_CAP}`}</span>
               </div>
               <div className="track">
                 <div className="fill" style={{ width: `${levelPct}%` }} />
@@ -198,7 +206,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
       </div>
 
       {listOpen && (
-        <div className="full-list" role="region" aria-label="Full leveling list">
+        <div className="full-list" id="full-list" role="region" aria-label="Full leveling list">
           {rows.map((r) => (
             <div
               key={r.level}

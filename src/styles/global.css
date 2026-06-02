@@ -619,10 +619,15 @@ button { font-family: inherit; }
 
 .systems-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.9rem; max-width: 1100px; margin: 0 auto; }
 .system-card { background: rgba(17, 16, 15, 0.9); border: 1px solid var(--line); border-radius: 6px; padding: 0.95rem 1.05rem; position: relative; }
-.system-card h3 { font-family: Cinzel, serif; color: var(--gold-bright); margin: 0 0 0.4rem; font-size: 1rem; padding-right: 3rem; }
+.system-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.4rem; }
+.system-card h3 { font-family: Cinzel, serif; color: var(--gold-bright); margin: 0; font-size: 1rem; }
 .system-card p { font-size: 0.83rem; color: var(--muted); margin: 0.3rem 0; }
 .system-card .relevance { font-size: 0.8rem; color: #dcc9b8; border-left: 3px solid var(--blood); padding-left: 0.6rem; margin-top: 0.5rem; }
-.new-badge { position: absolute; top: 0.85rem; right: 0.9rem; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.06em; color: var(--tier-s); border: 1px solid var(--tier-s); border-radius: 3px; padding: 0.1rem 0.35rem; }
+.system-tag { flex-shrink: 0; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; padding: 0.12rem 0.4rem; border: 1px solid; white-space: nowrap; }
+.system-tag.tag-new { color: var(--tier-s); border-color: var(--tier-s); background: rgba(111, 207, 151, 0.12); }
+.system-tag.tag-reworked { color: var(--tier-a); border-color: var(--tier-a); background: rgba(88, 166, 212, 0.12); }
+.system-tag.tag-changed { color: var(--gold); border-color: var(--gold); background: rgba(212, 175, 55, 0.12); }
+.system-tag.tag-returning { color: var(--muted); border-color: var(--line); background: rgba(255, 255, 255, 0.04); }
 
 /* --- Visual panel (build "looks like") ----------------------------------- */
 

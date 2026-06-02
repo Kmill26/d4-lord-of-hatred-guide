@@ -1,13 +1,12 @@
 import { useMemo, useState, type CSSProperties } from 'react'
 import { BUILDS } from '../../data/builds'
 import { CLASSES, CLASS_ORDER } from '../../data/classes'
+import { byTier } from '../../data/tierList'
 import { ClassPortrait, TierBadge } from '../shared'
 
 interface Props {
   onPickBuild: (id: string) => void
 }
-
-const TIER_RANK = { S: 0, A: 1, B: 2 } as const
 
 export function BuildsView({ onPickBuild }: Props) {
   const [query, setQuery] = useState('')
@@ -22,7 +21,7 @@ export function BuildsView({ onPickBuild }: Props) {
         b.selection ?? ''
       } ${b.skillPriority.join(' ')}`.toLowerCase()
       return hay.includes(q)
-    }).sort((a, b) => TIER_RANK[a.tier] - TIER_RANK[b.tier])
+    }).sort(byTier)
   }, [query, classFilter])
 
   return (
@@ -56,7 +55,23 @@ export function BuildsView({ onPickBuild }: Props) {
         </div>
 
         {filtered.length === 0 ? (
-          <p className="empty-note">No builds match “{query}”.</p>
+          <div className="empty-note">
+            <p>
+              No builds match
+              {query ? ` “${query}”` : ''}
+              {classFilter !== 'all' ? ` in ${classFilter}` : ''}.
+            </p>
+            <button
+              type="button"
+              className="ctrl-btn"
+              onClick={() => {
+                setQuery('')
+                setClassFilter('all')
+              }}
+            >
+              Clear search &amp; filters
+            </button>
+          </div>
         ) : (
           <div className="class-grid">
             {filtered.map((b) => {

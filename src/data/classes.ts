@@ -35,7 +35,7 @@ export const CLASSES: Record<ClassName, ClassInfo> = {
         'Legion — binds Ae’grom; endless lesser-demon swarm',
         'Vanguard — binds Abodian; transform into Demonform',
         'Mastermind — binds Laalish; shadow / stealth control',
-        'Ritualist — binds Vollach; Hellfire & hex rituals',
+        'Ritualist — binds Valloch; Hellfire & hex rituals',
       ],
     },
     accent: '#9b6fd4',
