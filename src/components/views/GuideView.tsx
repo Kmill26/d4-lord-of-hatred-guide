@@ -284,6 +284,9 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
           <button type="button" className="ctrl-btn" title="Copy this step" onClick={copyCurrent}>
             {copied ? 'Copied!' : '⎘ Copy'}
           </button>
+          <span className="sr-only" role="status" aria-live="polite">
+            {copied ? 'Copied step to clipboard' : ''}
+          </span>
           <span className="kbd-hint">Space · ←→ · M · R · /</span>
         </div>
         <span className="build-name">

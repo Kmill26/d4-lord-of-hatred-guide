@@ -64,7 +64,7 @@ export function QuickRefView({ state, onSwitchView }: Props) {
         </div>
         <div className="now-skill">→ {current.skill}</div>
         {current.note && (
-          <div style={{ fontSize: '0.82rem', color: '#c9b8a8', margin: '0.25rem 0' }}>
+          <div style={{ fontSize: '0.82rem', color: 'var(--muted-warm)', margin: '0.25rem 0' }}>
             {current.note}
           </div>
         )}
@@ -174,8 +174,6 @@ export function QuickRefView({ state, onSwitchView }: Props) {
           </table>
         </div>
       </div>
-
-      <p className="disclaimer">Fan-made strategium · Not affiliated with Blizzard Entertainment</p>
     </section>
   )
 }

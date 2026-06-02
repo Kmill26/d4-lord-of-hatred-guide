@@ -49,10 +49,10 @@ export function PathsView({ onPickBuild }: Props) {
                     </h3>
                     <div className="tag">{c.tagline}</div>
                     <p>
-                      <strong style={{ color: '#e8d9c8' }}>On screen:</strong> {c.onScreen}
+                      <strong style={{ color: 'var(--muted-warm)' }}>On screen:</strong> {c.onScreen}
                     </p>
                     <p>
-                      <strong style={{ color: '#e8d9c8' }}>Role:</strong> {c.role}
+                      <strong style={{ color: 'var(--muted-warm)' }}>Role:</strong> {c.role}
                     </p>
                   </div>
                 </button>
@@ -112,8 +112,6 @@ export function PathsView({ onPickBuild }: Props) {
             </tbody>
           </table>
         </div>
-      </div>
-      <p className="disclaimer">Fan-made strategium · Not affiliated with Blizzard Entertainment</p>
-    </section>
+      </div>    </section>
   )
 }

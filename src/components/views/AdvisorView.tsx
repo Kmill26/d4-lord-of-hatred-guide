@@ -1,5 +1,6 @@
 import { BUILD_BY_ID } from '../../data/builds'
 import { RESPEC_ADVICE } from '../../data/strategy'
+import { TIER_LIST } from '../../data/tierList'
 import type { Build } from '../../data/types'
 import { TierBadge } from '../shared'
 
@@ -8,14 +9,8 @@ interface Props {
   onPickBuild: (id: string) => void
 }
 
-const FAST_ALTERNATIVES = [
-  'rogue-dance-of-knives',
-  'necro-minion',
-  'barb-frenzy-throw',
-  'sorc-static-blizzard',
-  'paladin-shield-retribution',
-  'spiritborn-quill-volley',
-]
+// Fastest alternatives = the S-tier leveling builds (single source of truth).
+const FAST_ALTERNATIVES = TIER_LIST.S.map((e) => e.buildId)
 
 const genericStay = (tier: Build['tier']): string =>
   tier === 'S'
@@ -73,8 +68,6 @@ export function AdvisorView({ build, onPickBuild }: Props) {
             </button>
           ))}
         </div>
-      </div>
-      <p className="disclaimer">Fan-made strategium · Not affiliated with Blizzard Entertainment</p>
-    </section>
+      </div>    </section>
   )
 }

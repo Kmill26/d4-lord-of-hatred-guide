@@ -44,8 +44,6 @@ export function TierListView({ currentBuildId, onPickBuild }: Props) {
             </div>
           ))}
         </div>
-      </div>
-      <p className="disclaimer">Fan-made strategium · Not affiliated with Blizzard Entertainment</p>
-    </section>
+      </div>    </section>
   )
 }

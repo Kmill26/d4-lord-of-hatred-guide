@@ -15,6 +15,7 @@
   --text: #f3ece4;
   --muted: #c2b4a9;          /* raised from #b9aaa0 for contrast */
   --faint: #9a8f86;          /* raised from #6a5f58 (disclaimer / hints) */
+  --muted-warm: #dcc9b8;     /* warm body text on dark panels */
   --line: rgba(212, 175, 55, 0.28);
   --panel: #11100f;
   --tier-s: #6fcf97;
@@ -445,8 +446,8 @@ button { font-family: inherit; }
 .level-row .skill { flex: 1; font-size: 0.88rem; text-align: left; }
 .flag {
   width: 1.6rem; height: 1.6rem;
-  border: 1px solid var(--red);
-  color: var(--red);
+  border: 1px solid #e0655c;
+  color: #e0655c;
   background: transparent;
   border-radius: 50%;
   display: grid;
@@ -679,6 +680,82 @@ button { font-family: inherit; }
 
 .ember-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 
+/* --- Utilities ----------------------------------------------------------- */
+
+.muted-warm { color: var(--muted-warm); }
+.help-btn { font-weight: 900; min-width: 2rem; }
+
+/* --- Route timeline ------------------------------------------------------ */
+
+.route-timeline { list-style: none; margin: 0; padding: 0; }
+.route-phase { position: relative; }
+.route-band {
+  font-family: Cinzel, serif;
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.route-phase.phase-active {
+  border-left-color: var(--gold);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.12);
+}
+.here-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 800;
+  background: var(--gold);
+  color: #1a1207;
+  border-radius: 3px;
+  padding: 0.1rem 0.45rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+}
+.route-phase > .ctrl-btn { margin-top: 0.65rem; }
+
+/* --- Shortcuts modal ----------------------------------------------------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(5, 4, 3, 0.78);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.modal {
+  width: min(520px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: linear-gradient(rgba(18, 14, 12, 0.99), rgba(12, 10, 9, 0.99));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 60px rgba(142, 32, 36, 0.3);
+  padding: 1.1rem 1.3rem 1.3rem;
+}
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.modal-head h2 { font-family: 'Cinzel Decorative', Cinzel, serif; color: var(--gold-bright); margin: 0; font-size: 1.2rem; }
+.shortcut-group { margin-bottom: 0.9rem; }
+.shortcut-group h3 { font-family: Cinzel, serif; color: var(--red); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 0.4rem; }
+.shortcut-group dl { margin: 0; }
+.shortcut-row { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.2rem 0; }
+.shortcut-row dt { flex: 0 0 7.5rem; margin: 0; text-align: right; }
+.shortcut-row dd { margin: 0; color: var(--muted); font-size: 0.88rem; }
+kbd {
+  font-family: Cinzel, ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
 /* --- Responsive ---------------------------------------------------------- */
 
 @media (max-width: 899px) {
@@ -688,7 +765,14 @@ button { font-family: inherit; }
 @media (max-width: 700px) {
   .brand { display: none; }
   .gear-panel { grid-template-columns: 1fr; }
-  .nav-tab { padding: 0.3rem 0.5rem; font-size: 0.68rem; }
+  /* Keep the 8 tabs on one scrollable row instead of wrapping into a tall block. */
+  .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-tab { padding: 0.3rem 0.5rem; font-size: 0.68rem; white-space: nowrap; }
   .build-select select { max-width: 150px; font-size: 0.78rem; }
   .build-name { display: none; }
   .footer { justify-content: center; }

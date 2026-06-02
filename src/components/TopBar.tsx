@@ -14,6 +14,7 @@ interface Props {
   onSelectView: (v: ViewId) => void
   onSelectBuild: (id: string) => void
   onResetLevel: () => void
+  onOpenHelp: () => void
 }
 
 export function TopBar({
@@ -24,6 +25,7 @@ export function TopBar({
   onSelectView,
   onSelectBuild,
   onResetLevel,
+  onOpenHelp,
 }: Props) {
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const showBuildControls = view === 'guide' || view === 'quickref'
@@ -99,8 +101,10 @@ export function TopBar({
           <button
             type="button"
             className="level-pill"
-            onClick={onResetLevel}
-            title="Reset to level 1"
+            onClick={() => {
+              if (level <= 1 || window.confirm('Jump back to level 1?')) onResetLevel()
+            }}
+            title="Jump to level 1"
           >
             <span>L</span>
             <span className="num">{level}</span>
@@ -117,6 +121,16 @@ export function TopBar({
           </div>
         </div>
       )}
+
+      <button
+        type="button"
+        className="ctrl-btn help-btn"
+        onClick={onOpenHelp}
+        aria-label="Keyboard shortcuts"
+        title="Keyboard shortcuts (?)"
+      >
+        ?
+      </button>
     </header>
   )
 }

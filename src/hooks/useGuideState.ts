@@ -38,7 +38,7 @@ interface PersistShape {
 }
 
 export const clampLevel = (lvl: number): number =>
-  Math.max(1, Math.min(LEVEL_CAP, Math.round(lvl) || 1))
+  Number.isFinite(lvl) ? Math.max(1, Math.min(LEVEL_CAP, Math.round(lvl))) : 1
 
 /** localStorage with an in-memory fallback (private mode / blocked storage). */
 const storage = (() => {

@@ -74,6 +74,12 @@ export function MetersBars({ meters }: { meters: Meters }) {
   )
 }
 
+export function Disclaimer() {
+  return (
+    <p className="disclaimer">Fan-made strategium · Not affiliated with Blizzard Entertainment</p>
+  )
+}
+
 export function RunewordList({ runes }: { runes: Runeword[] }) {
   if (!runes.length) return null
   return (
