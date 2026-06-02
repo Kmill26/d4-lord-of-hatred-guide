@@ -1,11 +1,13 @@
 {
   "name": "d4-lord-of-hatred-guide",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Interactive Diablo IV: Lord of Hatred (Season 13) leveling companion — class guides, point-by-point leveling paths, tier list, route, and respec advice.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
     "lint": "eslint .",
     "preview": "vite preview"
   },

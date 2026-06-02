@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Diablo IV · Lord of Hatred — Leveling Strategium
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive **Diablo IV: Lord of Hatred** (Season 13 · *Season of Reckoning*) leveling
+companion. Pick a class and build, then get every milestone from level 1 to 70 — plus a
+build tier list, the leveling route, mercenary advice, a "what's new" systems primer, and a
+respec advisor.
 
-Currently, two official plugins are available:
+> Fan-made. Not affiliated with Blizzard Entertainment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Class Guide** — what each of the 8 classes looks like to play, with the new
+  **Paladin** and **Warlock** classes highlighted.
+- **Point Guide** — a level-by-level companion (keyboard-driven) that flags every real
+  milestone: mechanic unlocks, power spikes, capstones, and planned respecs.
+- **Quick Ref** — a printable/copyable table of the whole 1→70 path.
+- **Builds** — 24 leveling builds (3 per class), searchable and filterable.
+- **Tier List** — leveling-speed tiers (S/A/B) with sources.
+- **Route** — the Season 13 leveling route (Skovos), difficulty/XP advice, and mercenaries.
+- **What's New** — the Lord of Hatred systems that matter for leveling.
+- **Respec** — should you switch builds? Build-aware advice.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Progress (current build, level, completed/flagged levels) is saved to `localStorage` and
+the URL hash (`#buildId/level`) is shareable and deep-linkable. Fully keyboard navigable
+with visible focus, ARIA tabs, and `prefers-reduced-motion` support.
 
-## Expanding the ESLint configuration
+## Accuracy
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Game data was researched and adversarially fact-checked (June 2026) against Maxroll, Icy
+Veins, Wowhead, Mobalytics, Game8, the official Blizzard pages, and Wikipedia. Lord of
+Hatred released **April 28, 2026**, adds **Paladin** and **Warlock** (8 classes total),
+raises the level cap to **70**, and expands the difficulty ladder to **16 tiers**
+(Normal/Hard/Expert/Penitent + Torment 1–12).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Vite + React 19 + TypeScript. Zero runtime dependencies beyond React. All game data is typed
+and lives in [`src/data`](src/data).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev        # local dev server
+npm run build      # type-check + production build to dist/
+npm run preview    # preview the production build
+npm run lint       # eslint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The build uses a relative base, so the `dist/` output can be hosted from a domain root, a
+GitHub Pages project sub-path, or opened directly from disk.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project layout
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  data/         # typed game data: classes, builds, tier list, route, mercenaries, systems
+  hooks/        # useGuideState (persistence + hash routing), reduced-motion
+  lib/          # leveling-row generator
+  components/   # TopBar + per-view components + shared atoms
+  styles/       # the HUD design system
 ```
