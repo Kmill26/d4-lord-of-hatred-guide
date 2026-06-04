@@ -4,6 +4,7 @@ const GROUPS: Array<{ scope: string; items: Array<[string, string]> }> = [
   {
     scope: 'Anywhere',
     items: [
+      ['⌘K / Ctrl K', 'Command palette — jump to anything'],
       ['?', 'Show / hide this help'],
       ['Tab', 'Move between controls'],
       ['← →', 'Switch section (when a tab is focused)'],

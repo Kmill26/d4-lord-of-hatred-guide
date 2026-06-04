@@ -6,9 +6,11 @@ import { ClassPortrait, TierBadge } from '../shared'
 
 interface Props {
   onPickBuild: (id: string) => void
+  compare: string[]
+  onToggleCompare: (id: string) => void
 }
 
-export function BuildsView({ onPickBuild }: Props) {
+export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
   const [query, setQuery] = useState('')
   const [classFilter, setClassFilter] = useState<'all' | string>('all')
 
@@ -76,13 +78,12 @@ export function BuildsView({ onPickBuild }: Props) {
           <div className="class-grid">
             {filtered.map((b) => {
               const c = CLASSES[b.className]
+              const inCompare = compare.includes(b.id)
               return (
-                <button
+                <article
                   key={b.id}
-                  type="button"
-                  className="class-card btn-reset"
+                  className="class-card"
                   style={{ '--accent': c.accent } as CSSProperties}
-                  onClick={() => onPickBuild(b.id)}
                 >
                   <TierBadge tier={b.tier} />
                   <ClassPortrait cls={c} height={56} className="thumb" />
@@ -92,10 +93,22 @@ export function BuildsView({ onPickBuild }: Props) {
                   <p>
                     <em>{b.feelsLike}</em>
                   </p>
-                  {b.selection && (
-                    <p style={{ color: 'var(--gold)' }}>{b.selection}</p>
-                  )}
-                </button>
+                  {b.selection && <p style={{ color: 'var(--gold)' }}>{b.selection}</p>}
+                  <div className="card-actions">
+                    <button type="button" className="card-open" onClick={() => onPickBuild(b.id)}>
+                      Open guide →
+                    </button>
+                    <button
+                      type="button"
+                      className={`card-cmp ${inCompare ? 'on' : ''}`}
+                      aria-pressed={inCompare}
+                      onClick={() => onToggleCompare(b.id)}
+                      title="Add to the Compare view"
+                    >
+                      {inCompare ? '✓ Comparing' : '＋ Compare'}
+                    </button>
+                  </div>
+                </article>
               )
             })}
           </div>

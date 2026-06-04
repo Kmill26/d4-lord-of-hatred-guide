@@ -64,7 +64,15 @@ export function MetersBars({ meters }: { meters: Meters }) {
         return (
           <div className="meter-row" key={key}>
             <span className="label">{label}</span>
-            <span className="meter-bar" role="img" aria-label={`${label}: ${v} of 5`}>
+            <span
+              className="meter-bar"
+              role="progressbar"
+              aria-label={label}
+              aria-valuenow={v}
+              aria-valuemin={0}
+              aria-valuemax={5}
+              aria-valuetext={`${v} of 5`}
+            >
               <span className="meter-fill" style={{ width: `${v * 20}%` }} />
             </span>
           </div>

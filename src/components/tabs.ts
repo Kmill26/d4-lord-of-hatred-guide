@@ -10,8 +10,10 @@ export const TABS: TabDef[] = [
   { id: 'guide', label: 'Point Guide' },
   { id: 'quickref', label: 'Quick Ref' },
   { id: 'builds', label: 'Builds' },
+  { id: 'compare', label: 'Compare' },
   { id: 'tiers', label: 'Tier List' },
   { id: 'route', label: 'Route' },
   { id: 'systems', label: "What's New" },
+  { id: 'glossary', label: 'Glossary' },
   { id: 'advisor', label: 'Respec' },
 ]

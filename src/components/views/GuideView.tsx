@@ -4,6 +4,7 @@ import { LEVEL_CAP } from '../../data/builds'
 import { buildLevelRows, levelRowText } from '../../lib/leveling'
 import type { GuideState, ViewId } from '../../hooks/useGuideState'
 import { ClassPortrait, MetersBars, RunewordList } from '../shared'
+import { GuideDossier } from '../GuideDossier'
 
 interface Props {
   state: GuideState
@@ -12,7 +13,8 @@ interface Props {
 }
 
 export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
-  const { build, level, completed, flags, advance, goToLevel, toggleFlag } = state
+  const { build, level, completed, flags, checks, advance, goToLevel, toggleFlag, toggleCheck, getNote, setNote } =
+    state
   const cls = CLASSES[build.className]
   const rows = useMemo(() => buildLevelRows(build), [build])
   const current = rows[level - 1] ?? rows[0]
@@ -203,6 +205,16 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
             </div>
           </div>
         </div>
+
+        <GuideDossier
+          build={build}
+          level={level}
+          checks={checks}
+          toggleCheck={toggleCheck}
+          getNote={getNote}
+          setNote={setNote}
+          goToLevel={goToLevel}
+        />
       </div>
 
       {listOpen && (

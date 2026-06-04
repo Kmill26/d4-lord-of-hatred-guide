@@ -15,6 +15,8 @@ interface Props {
   onSelectBuild: (id: string) => void
   onResetLevel: () => void
   onOpenHelp: () => void
+  onOpenCommand: () => void
+  onOpenFinder: () => void
 }
 
 export function TopBar({
@@ -26,6 +28,8 @@ export function TopBar({
   onSelectBuild,
   onResetLevel,
   onOpenHelp,
+  onOpenCommand,
+  onOpenFinder,
 }: Props) {
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const showBuildControls = view === 'guide' || view === 'quickref'
@@ -122,15 +126,37 @@ export function TopBar({
         </div>
       )}
 
-      <button
-        type="button"
-        className="ctrl-btn help-btn"
-        onClick={onOpenHelp}
-        aria-label="Keyboard shortcuts"
-        title="Keyboard shortcuts (?)"
-      >
-        ?
-      </button>
+      <div className="topbar-tools">
+        <button
+          type="button"
+          className="cmd-trigger"
+          onClick={onOpenCommand}
+          aria-label="Open command palette"
+          title="Search & jump (⌘K)"
+        >
+          <span className="cmd-trigger-icon" aria-hidden="true">⌕</span>
+          <span className="cmd-trigger-label">Search</span>
+          <kbd className="cmd-trigger-kbd" aria-hidden="true">⌘K</kbd>
+        </button>
+        <button
+          type="button"
+          className="ctrl-btn finder-btn"
+          onClick={onOpenFinder}
+          aria-label="Find my build"
+          title="Find my build"
+        >
+          <span aria-hidden="true">✦</span> Find
+        </button>
+        <button
+          type="button"
+          className="ctrl-btn help-btn"
+          onClick={onOpenHelp}
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          ?
+        </button>
+      </div>
     </header>
   )
 }
