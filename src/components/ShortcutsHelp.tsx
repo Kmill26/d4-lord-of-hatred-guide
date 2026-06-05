@@ -6,8 +6,9 @@ const GROUPS: Array<{ scope: string; items: Array<[string, string]> }> = [
     items: [
       ['⌘K / Ctrl K', 'Command palette — jump to anything'],
       ['?', 'Show / hide this help'],
+      ['Esc', 'Close modals, finder, help, command palette'],
       ['Tab', 'Move between controls'],
-      ['← →', 'Switch section (when a tab is focused)'],
+      ['← → / Home / End', 'Switch section (when a tab is focused)'],
     ],
   },
   {

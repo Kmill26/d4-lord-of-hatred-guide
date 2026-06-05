@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { BUILD_BY_ID, DEFAULT_BUILD_ID, LEVEL_CAP } from '../data/builds'
 import type { Build } from '../data/types'
+import { MAX_FAVORITES } from '../lib/favorites'
+import { recordLevelAdvance } from '../lib/sessionStats'
 import { storage } from '../lib/storage'
 
 export type ViewId =
@@ -28,29 +31,30 @@ export const VIEW_IDS: ViewId[] = [
   'advisor',
 ]
 
-const STORAGE_KEY = 'd4_loh_guide_v3'
-const LEGACY_KEY = 'd4_loh_guide_v2'
+const STORAGE_KEY = 'd4_loh_guide_v4'
+const LEGACY_V3 = 'd4_loh_guide_v3'
+const LEGACY_V2 = 'd4_loh_guide_v2'
 const MAX_COMPARE = 3
+const MAX_NOTE_KEYS = 250
+const MAX_NOTE_LEN = 4096
+const MAX_CHECKS = 80
 
 interface BuildProgress {
   completed: number[]
   flags: number[]
-  /** Checklist item keys (gear/quest tracker) the user has ticked. */
   checks: string[]
 }
 
 interface PersistShape {
-  v: 3
+  v: 4
   buildId: string
   level: number
   view: ViewId
   progress: Record<string, BuildProgress>
-  /** Free-text notes keyed by `${buildId}:${level}`. */
   notes: Record<string, string>
-  /** Build ids selected for side-by-side comparison. */
   compare: string[]
+  favorites: string[]
   seenOnboarding: boolean
-  /** Tint the UI chrome with the active build's class accent. */
   theme: boolean
 }
 
@@ -69,60 +73,112 @@ export function parseHash(): { buildId?: string; level?: number } {
 
 const emptyProgress = (): BuildProgress => ({ completed: [], flags: [], checks: [] })
 
+function asNumArray(raw: unknown): number[] {
+  if (!Array.isArray(raw)) return []
+  const nums = raw
+    .filter((v): v is number => typeof v === 'number' && Number.isFinite(v))
+    .map((v) => Math.round(v))
+    .filter((v) => v >= 1 && v <= LEVEL_CAP)
+  return [...new Set(nums)]
+}
+
+function asStrArray(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  const strs = raw.filter((v): v is string => typeof v === 'string' && v.length > 0)
+  return [...new Set(strs)]
+}
+
+export function normalizeBuildProgress(raw: unknown): BuildProgress {
+  if (!raw || typeof raw !== 'object') return emptyProgress()
+  const p = raw as Partial<BuildProgress>
+  return {
+    completed: asNumArray(p.completed).slice(0, LEVEL_CAP),
+    flags: asNumArray(p.flags).slice(0, LEVEL_CAP),
+    checks: asStrArray(p.checks).slice(0, MAX_CHECKS),
+  }
+}
+
+function normalizeProgressMap(raw: unknown): Record<string, BuildProgress> {
+  if (!raw || typeof raw !== 'object') return {}
+  return Object.fromEntries(
+    Object.entries(raw as Record<string, unknown>).map(([id, p]) => [id, normalizeBuildProgress(p)]),
+  )
+}
+
+function normalizeNotes(raw: unknown): Record<string, string> {
+  if (!raw || typeof raw !== 'object') return {}
+  const out: Record<string, string> = {}
+  const entries = Object.entries(raw as Record<string, unknown>).slice(0, MAX_NOTE_KEYS)
+  for (const [key, value] of entries) {
+    if (typeof value === 'string') out[key] = value.slice(0, MAX_NOTE_LEN)
+  }
+  return out
+}
+
 function defaults(): PersistShape {
   return {
-    v: 3,
+    v: 4,
     buildId: DEFAULT_BUILD_ID,
     level: 1,
     view: 'paths',
     progress: {},
     notes: {},
     compare: [],
+    favorites: [],
     seenOnboarding: false,
     theme: true,
   }
 }
 
-/** Read v3, else migrate v2, else defaults — then overlay the URL hash. */
-function loadInitial(): PersistShape {
-  const base = defaults()
+function readSaved(): { saved: Partial<PersistShape>; hadState: boolean } {
   let saved: Partial<PersistShape> = {}
   let hadState = false
   try {
-    const raw = storage.get(STORAGE_KEY)
-    if (raw) {
-      saved = JSON.parse(raw) as Partial<PersistShape>
+    const rawV4 = storage.get(STORAGE_KEY)
+    if (rawV4) {
+      saved = JSON.parse(rawV4) as Partial<PersistShape>
       hadState = !!saved.buildId
-    } else {
-      // One-time migration from the v2 schema (no checks/notes/compare).
-      const legacy = storage.get(LEGACY_KEY)
-      if (legacy) {
-        const v2 = JSON.parse(legacy) as Partial<{
-          buildId: string
-          level: number
-          view: ViewId
-          progress: Record<string, { completed: number[]; flags: number[] }>
-        }>
-        if (v2.buildId) {
-          hadState = true
-          saved = {
-            buildId: v2.buildId,
-            level: v2.level,
-            view: v2.view,
-            progress: Object.fromEntries(
-              Object.entries(v2.progress ?? {}).map(([id, p]) => [
-                id,
-                { completed: p.completed ?? [], flags: p.flags ?? [], checks: [] },
-              ]),
-            ),
-          }
+      return { saved, hadState }
+    }
+    const rawV3 = storage.get(LEGACY_V3)
+    if (rawV3) {
+      saved = JSON.parse(rawV3) as Partial<PersistShape>
+      hadState = !!saved.buildId
+      return { saved, hadState }
+    }
+    const legacy = storage.get(LEGACY_V2)
+    if (legacy) {
+      const v2 = JSON.parse(legacy) as Partial<{
+        buildId: string
+        level: number
+        view: ViewId
+        progress: Record<string, { completed: number[]; flags: number[] }>
+      }>
+      if (v2.buildId) {
+        hadState = true
+        saved = {
+          buildId: v2.buildId,
+          level: v2.level,
+          view: v2.view,
+          progress: Object.fromEntries(
+            Object.entries(v2.progress ?? {}).map(([id, p]) => [
+              id,
+              { completed: p.completed ?? [], flags: p.flags ?? [], checks: [] },
+            ]),
+          ),
         }
       }
     }
   } catch {
     saved = {}
   }
+  return { saved, hadState }
+}
 
+/** Read v4, else v3, else migrate v2, else defaults — then overlay the URL hash. */
+function loadInitial(): PersistShape {
+  const base = defaults()
+  const { saved, hadState } = readSaved()
   const fromHash = parseHash()
   const buildId =
     fromHash.buildId ??
@@ -131,20 +187,24 @@ function loadInitial(): PersistShape {
   return {
     ...base,
     ...saved,
-    v: 3,
+    v: 4,
     buildId,
     level: clampLevel(fromHash.level ?? saved.level ?? 1),
     view:
       saved.view && VIEW_IDS.includes(saved.view) ? saved.view : hadState ? 'guide' : 'paths',
-    progress: saved.progress ?? {},
-    notes: saved.notes ?? {},
-    compare: (saved.compare ?? []).filter((id) => BUILD_BY_ID[id]).slice(0, MAX_COMPARE),
+    progress: normalizeProgressMap(saved.progress),
+    notes: normalizeNotes(saved.notes),
+    compare: asStrArray(saved.compare)
+      .filter((id) => BUILD_BY_ID[id])
+      .slice(0, MAX_COMPARE),
+    favorites: asStrArray(saved.favorites)
+      .filter((id) => BUILD_BY_ID[id])
+      .slice(0, MAX_FAVORITES),
     seenOnboarding: saved.seenOnboarding ?? false,
     theme: saved.theme ?? true,
   }
 }
 
-/** Whether the build finder onboarding has already been shown (sync read). */
 export function peekSeenOnboarding(): boolean {
   return loadInitial().seenOnboarding
 }
@@ -157,8 +217,11 @@ export interface GuideState {
   flags: Set<number>
   checks: Set<string>
   compare: string[]
+  favorites: string[]
   seenOnboarding: boolean
   theme: boolean
+  isFavorite: (id: string) => boolean
+  toggleFavorite: (id: string) => boolean
   selectBuild: (id: string, opts?: { keepLevel?: boolean; view?: ViewId }) => void
   goToLevel: (lvl: number) => void
   advance: () => void
@@ -168,6 +231,7 @@ export interface GuideState {
   resetLevel: () => void
   setView: (view: ViewId) => void
   getNote: (lvl?: number) => string
+  getBuildNotes: () => Record<string, string>
   setNote: (lvl: number, value: string) => void
   toggleCompare: (id: string) => void
   clearCompare: () => void
@@ -180,20 +244,31 @@ export function useGuideState(): GuideState {
 
   const { buildId, level, view, progress } = s
   const build = BUILD_BY_ID[buildId] ?? BUILD_BY_ID[DEFAULT_BUILD_ID]
+  const buildProgress = useMemo(() => normalizeBuildProgress(progress[buildId]), [progress, buildId])
 
-  const completed = useMemo(() => new Set(progress[buildId]?.completed ?? []), [progress, buildId])
-  const flags = useMemo(() => new Set(progress[buildId]?.flags ?? []), [progress, buildId])
-  const checks = useMemo(() => new Set(progress[buildId]?.checks ?? []), [progress, buildId])
+  const completed = useMemo(() => new Set(buildProgress.completed), [buildProgress])
+  const flags = useMemo(() => new Set(buildProgress.flags), [buildProgress])
+  const checks = useMemo(() => new Set(buildProgress.checks), [buildProgress])
+  const compare = useMemo(
+    () => s.compare.filter((id) => BUILD_BY_ID[id]).slice(0, MAX_COMPARE),
+    [s.compare],
+  )
+  const favorites = useMemo(
+    () => s.favorites.filter((id) => BUILD_BY_ID[id]),
+    [s.favorites],
+  )
 
-  // Persist + reflect build/level in the URL hash.
   useEffect(() => {
-    storage.set(STORAGE_KEY, JSON.stringify(s))
+    try {
+      storage.set(STORAGE_KEY, JSON.stringify(s))
+    } catch {
+      /* storage full / blocked */
+    }
     if (typeof location === 'undefined' || typeof history === 'undefined') return
     const desired = `#${s.buildId}/${s.level}`
     if (location.hash !== desired) history.replaceState(null, '', desired)
   }, [s])
 
-  // Sync from the URL when the user navigates (back/forward or shared link).
   useEffect(() => {
     const onHash = () => {
       const { buildId: bid, level: lvl } = parseHash()
@@ -211,7 +286,7 @@ export function useGuideState(): GuideState {
   const mutateBuild = useCallback(
     (id: string, fn: (p: BuildProgress) => BuildProgress) =>
       setS((prev) => {
-        const cur = prev.progress[id] ?? emptyProgress()
+        const cur = normalizeBuildProgress(prev.progress[id])
         return { ...prev, progress: { ...prev.progress, [id]: fn(cur) } }
       }),
     [],
@@ -233,10 +308,10 @@ export function useGuideState(): GuideState {
 
   const advance = useCallback(() => {
     setS((prev) => {
-      const cur = prev.progress[prev.buildId] ?? emptyProgress()
-      const completedNext = cur.completed.includes(prev.level)
-        ? cur.completed
-        : [...cur.completed, prev.level]
+      const cur = normalizeBuildProgress(prev.progress[prev.buildId])
+      const already = cur.completed.includes(prev.level)
+      const completedNext = already ? cur.completed : [...cur.completed, prev.level]
+      if (!already) recordLevelAdvance(prev.buildId)
       return {
         ...prev,
         level: clampLevel(prev.level + 1),
@@ -249,7 +324,7 @@ export function useGuideState(): GuideState {
     (lvl?: number) =>
       setS((prev) => {
         const target = lvl ?? prev.level
-        const cur = prev.progress[prev.buildId] ?? emptyProgress()
+        const cur = normalizeBuildProgress(prev.progress[prev.buildId])
         const flagsNext = cur.flags.includes(target)
           ? cur.flags.filter((f) => f !== target)
           : [...cur.flags, target]
@@ -286,12 +361,21 @@ export function useGuideState(): GuideState {
     (lvl?: number) => s.notes[`${buildId}:${lvl ?? level}`] ?? '',
     [s.notes, buildId, level],
   )
+
+  const getBuildNotes = useCallback(() => {
+    const prefix = `${buildId}:`
+    return Object.fromEntries(
+      Object.entries(s.notes).filter(([key, val]) => key.startsWith(prefix) && val.trim()),
+    )
+  }, [s.notes, buildId])
+
   const setNote = useCallback(
     (lvl: number, value: string) =>
       setS((prev) => {
         const key = `${prev.buildId}:${lvl}`
         const notes = { ...prev.notes }
-        if (value.trim()) notes[key] = value
+        const trimmed = value.slice(0, MAX_NOTE_LEN)
+        if (trimmed.trim()) notes[key] = trimmed
         else delete notes[key]
         return { ...prev, notes }
       }),
@@ -303,19 +387,40 @@ export function useGuideState(): GuideState {
       setS((prev) => {
         if (!BUILD_BY_ID[id]) return prev
         const has = prev.compare.includes(id)
-        const compare = has
+        const next = has
           ? prev.compare.filter((c) => c !== id)
           : [...prev.compare, id].slice(-MAX_COMPARE)
-        return { ...prev, compare }
+        return { ...prev, compare: next }
       }),
     [],
   )
+
   const clearCompare = useCallback(() => setS((prev) => ({ ...prev, compare: [] })), [])
+
   const dismissOnboarding = useCallback(
     () => setS((prev) => ({ ...prev, seenOnboarding: true })),
     [],
   )
+
   const setTheme = useCallback((on: boolean) => setS((prev) => ({ ...prev, theme: on })), [])
+
+  const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites])
+
+  const toggleFavorite = useCallback((id: string): boolean => {
+    if (!BUILD_BY_ID[id]) return false
+    let allowed = false
+    flushSync(() => {
+      setS((prev) => {
+        const cur = prev.favorites.filter((fid) => BUILD_BY_ID[fid])
+        const has = cur.includes(id)
+        if (!has && cur.length >= MAX_FAVORITES) return prev
+        allowed = true
+        const next = has ? cur.filter((fid) => fid !== id) : [...cur, id]
+        return { ...prev, favorites: next }
+      })
+    })
+    return allowed
+  }, [])
 
   return {
     build,
@@ -324,9 +429,12 @@ export function useGuideState(): GuideState {
     completed,
     flags,
     checks,
-    compare: s.compare,
+    compare,
+    favorites,
     seenOnboarding: s.seenOnboarding,
     theme: s.theme,
+    isFavorite,
+    toggleFavorite,
     selectBuild,
     goToLevel,
     advance,
@@ -336,6 +444,7 @@ export function useGuideState(): GuideState {
     resetLevel,
     setView,
     getNote,
+    getBuildNotes,
     setNote,
     toggleCompare,
     clearCompare,
@@ -344,7 +453,6 @@ export function useGuideState(): GuideState {
   }
 }
 
-/** Track the user's reduced-motion preference reactively. */
 export function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState<boolean>(() => {
     if (typeof matchMedia === 'undefined') return false

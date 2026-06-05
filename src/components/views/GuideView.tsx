@@ -2,9 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CLASSES } from '../../data/classes'
 import { LEVEL_CAP } from '../../data/builds'
 import { buildLevelRows, levelRowText } from '../../lib/leveling'
+import { copyText } from '../../lib/exportProgress'
 import type { GuideState, ViewId } from '../../hooks/useGuideState'
 import { ClassPortrait, MetersBars, RunewordList } from '../shared'
 import { GuideDossier } from '../GuideDossier'
+import { LevelCallout } from '../LevelCallout'
+import { SessionStrip } from '../SessionStrip'
+import { ExportMenu } from '../ExportMenu'
 
 interface Props {
   state: GuideState
@@ -81,12 +85,10 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
   }, [reducedMotion])
 
   const copyCurrent = async () => {
-    try {
-      await navigator.clipboard?.writeText(levelRowText(current))
+    const ok = await copyText(levelRowText(current))
+    if (ok) {
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1200)
-    } catch {
-      /* clipboard unavailable — no-op */
     }
   }
 
@@ -105,7 +107,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
         <p className="guide-banner">
           In Lord of Hatred you allocate skill points freely and skills rank to 15 — there is no fixed
           “one point per level.” This companion flags every real milestone and otherwise tells you what to
-          prioritize. <strong>Space</strong> / <strong>→</strong> advance · <strong>M</strong> next ★ ·{' '}
+          prioritize. <strong>Space</strong> / <strong>Enter</strong> / <strong>→</strong> advance · <strong>M</strong> next ★ ·{' '}
           <strong>R</strong> quick-ref · <strong>/</strong> full list.
         </p>
 
@@ -115,6 +117,8 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
         <div className="sr-only" role="status" aria-live="polite">
           Level {level}: {current.skill}. {current.note}
         </div>
+
+        <LevelCallout level={level} build={build} />
 
         <div className="guide-layout">
           {/* What this build looks like */}
@@ -255,6 +259,8 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
         </div>
       )}
 
+      <SessionStrip buildId={build.id} completedCount={completed.size} level={level} />
+
       <footer className="footer">
         <div className="controls">
           <button type="button" className="ctrl-btn" onClick={() => goToLevel(level - 1)}>
@@ -283,7 +289,8 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
             Full list (/)
           </button>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="footer-right">
+          <ExportMenu state={state} />
           <button
             type="button"
             className="ctrl-btn"
@@ -299,7 +306,7 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
           <span className="sr-only" role="status" aria-live="polite">
             {copied ? 'Copied step to clipboard' : ''}
           </span>
-          <span className="kbd-hint">Space · ←→ · M · R · /</span>
+          <span className="kbd-hint">Space · Enter · ←→ · M · R · /</span>
         </div>
         <span className="build-name">
           {build.className} · {build.name}

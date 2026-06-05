@@ -49,8 +49,21 @@ function ViewFallback() {
 function App() {
   const state = useGuideState()
   const reducedMotion = usePrefersReducedMotion()
-  const { view, build, level, completed, compare, theme, selectBuild, resetLevel, setView, goToLevel } =
-    state
+  const {
+    view,
+    build,
+    level,
+    completed,
+    compare,
+    favorites,
+    theme,
+    isFavorite,
+    toggleFavorite,
+    selectBuild,
+    resetLevel,
+    setView,
+    goToLevel,
+  } = state
   const [helpOpen, setHelpOpen] = useState(false)
   const [cmdOpen, setCmdOpen] = useState(false)
   const [finderOpen, setFinderOpen] = useState(() => !peekSeenOnboarding())
@@ -117,6 +130,9 @@ function App() {
             onPickBuild={pickBuild}
             compare={compare}
             onToggleCompare={state.toggleCompare}
+            favorites={favorites}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
           />
         )
       case 'compare':
@@ -154,6 +170,8 @@ function App() {
           build={build}
           level={level}
           completedCount={completed.size}
+          isFavorite={isFavorite}
+          onToggleFavorite={toggleFavorite}
           onSelectView={(v: ViewId) => setView(v)}
           onSelectBuild={(id) => selectBuild(id, { keepLevel: true })}
           onResetLevel={resetLevel}

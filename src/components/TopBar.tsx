@@ -1,7 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { BUILDS, LEVEL_CAP } from '../data/builds'
 import { CLASS_ORDER } from '../data/classes'
 import type { ViewId } from '../hooks/useGuideState'
+import { favoriteCap } from '../lib/favorites'
 import { TierBadge } from './shared'
 import { TABS } from './tabs'
 import type { Build } from '../data/types'
@@ -11,6 +12,8 @@ interface Props {
   build: Build
   level: number
   completedCount: number
+  isFavorite: (id: string) => boolean
+  onToggleFavorite: (id: string) => boolean
   onSelectView: (v: ViewId) => void
   onSelectBuild: (id: string) => void
   onResetLevel: () => void
@@ -24,6 +27,8 @@ export function TopBar({
   build,
   level,
   completedCount,
+  isFavorite,
+  onToggleFavorite,
   onSelectView,
   onSelectBuild,
   onResetLevel,
@@ -32,6 +37,7 @@ export function TopBar({
   onOpenFinder,
 }: Props) {
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const [favNotice, setFavNotice] = useState('')
   const showBuildControls = view === 'guide' || view === 'quickref'
   const pct = Math.round((completedCount / LEVEL_CAP) * 100)
 
@@ -102,6 +108,29 @@ export function TopBar({
             })}
           </select>
           <TierBadge tier={build.tier} />
+          <button
+            type="button"
+            className={`fav-btn ${isFavorite(build.id) ? 'on' : ''}`}
+            aria-pressed={isFavorite(build.id)}
+            aria-label={
+              isFavorite(build.id) ? 'Remove build from favorites' : 'Add build to favorites'
+            }
+            title="Favorite this build"
+            onClick={() => {
+              const msg = favoriteCap(isFavorite(build.id), build.id, onToggleFavorite)
+              if (msg) {
+                setFavNotice(msg)
+                window.setTimeout(() => setFavNotice(''), 3000)
+              }
+            }}
+          >
+            {isFavorite(build.id) ? '★' : '☆'}
+          </button>
+          {favNotice && (
+            <span className="fav-notice" role="status" aria-live="polite">
+              {favNotice}
+            </span>
+          )}
           <button
             type="button"
             className="level-pill"

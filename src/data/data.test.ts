@@ -99,8 +99,13 @@ describe('cross-references', () => {
     }
   })
 
-  it('RESPEC_ADVICE keys are real builds', () => {
-    for (const id of Object.keys(RESPEC_ADVICE)) expect(BUILD_BY_ID[id], id).toBeTruthy()
+  it('RESPEC_ADVICE covers all 24 builds', () => {
+    expect(Object.keys(RESPEC_ADVICE)).toHaveLength(24)
+    for (const b of BUILDS) {
+      expect(RESPEC_ADVICE[b.id], `${b.id} needs respec advice`).toBeTruthy()
+      expect(RESPEC_ADVICE[b.id].stay.length).toBeGreaterThan(10)
+      expect(RESPEC_ADVICE[b.id].switch.length).toBeGreaterThan(10)
+    }
   })
 
   it('checklist item keys are unique within a build', () => {
@@ -176,5 +181,47 @@ describe('build finder', () => {
     )!
     const res = recommendBuilds([speed], BUILDS)
     expect(res[0].build.meters.speed).toBeGreaterThanOrEqual(4)
+  })
+
+  it('summon minion option ranks minion-style build first', () => {
+    const minionOpt = FINDER_QUESTIONS.find((q) => q.id === 'summon')!.options.find((o) => o.style === 'minion')!
+    const res = recommendBuilds([minionOpt], BUILDS)
+    expect(BUILD_STYLE[res[0].build.id]).toBe('minion')
+  })
+
+  it('summon hybrid option with prefer ranks a hybrid build high', () => {
+    const hybridOpt = FINDER_QUESTIONS.find((q) => q.id === 'summon')!.options.find((o) => o.style === 'hybrid')!
+    const res = recommendBuilds([hybridOpt], BUILDS)
+    const topStyles = res.slice(0, 3).map(r => BUILD_STYLE[r.build.id])
+    expect(topStyles).toContain('hybrid')
+  })
+
+  it('summon self-cast prefer favors high damage/aoe', () => {
+    const selfOpt = FINDER_QUESTIONS.find((q) => q.id === 'summon')!.options.find((o) => o.prefer && o.prefer.damage && !o.style)!
+    const res = recommendBuilds([selfOpt], BUILDS)
+    expect(res[0].build.meters.damage).toBeGreaterThanOrEqual(4)
+  })
+
+  it('mixed 4-answer summon flow produces sensible ranking (no regression)', () => {
+    const q = FINDER_QUESTIONS.find((qq) => qq.id === 'summon')!
+    const answers = [q.options[0], q.options[1], q.options[2], q.options[3]]
+    const res = recommendBuilds(answers, BUILDS)
+    expect(res.length).toBeGreaterThan(0)
+    expect(res[0].score).toBeGreaterThan(res[res.length - 1].score)
+  })
+
+  it('new glossary terms are resolvable by seeAlso and direct lookup', () => {
+    expect(GLOSSARY_BY_TERM['experience well']).toBeTruthy()
+    expect(GLOSSARY_BY_TERM['sigil']).toBeTruthy()
+    expect(GLOSSARY_BY_TERM['fragment bonus']).toBeTruthy()
+    expect(GLOSSARY_BY_TERM['arbiter form']).toBeTruthy()
+    expect(GLOSSARY_BY_TERM['demonform']).toBeTruthy()
+  })
+
+  it('barb-frenzy-throw respec uses specific stay text not genericStay', () => {
+    const advice = RESPEC_ADVICE['barb-frenzy-throw']
+    expect(advice).toBeTruthy()
+    expect(advice.stay).toMatch(/Best Barbarian leveler| ranged hit-and-run Frenzy/)
+    expect(advice.switch.length).toBeGreaterThan(10)
   })
 })

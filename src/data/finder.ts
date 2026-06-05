@@ -85,6 +85,16 @@ export const FINDER_QUESTIONS: FinderQuestion[] = [
       { label: 'Whatever’s strongest', desc: 'Tier over novelty', prefer: {} },
     ],
   },
+  {
+    id: 'summon',
+    question: 'Minions, demons, or flying solo?',
+    options: [
+      { label: 'I want an army clearing for me', desc: 'Minions / demons do the heavy lifting', style: 'minion', prefer: { ease: 1 } },
+      { label: 'A companion or two is great', desc: 'A pet or summon helps out', style: 'hybrid', prefer: { ease: 1 } },
+      { label: 'Pure self-cast, no pets', desc: 'Everything from your own hands', prefer: { damage: 1, aoe: 1 } },
+      { label: 'No strong preference', desc: 'Surprise me', prefer: {} },
+    ],
+  },
 ]
 
 const NEW_CLASSES = new Set(['Paladin', 'Warlock'])

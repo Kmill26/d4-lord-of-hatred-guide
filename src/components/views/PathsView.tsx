@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function PathsView({ onPickBuild }: Props) {
-  // One representative (best) build per class, for the compare table.
   const compareRows = CLASS_ORDER.map((cn) => bestBuildForClass(cn)).filter(
     (b): b is Build => !!b,
   )
@@ -27,6 +26,30 @@ export function PathsView({ onPickBuild }: Props) {
           <strong style={{ color: 'var(--gold)' }}>what you’ll actually see on screen</strong> — then pick a
           build to get every milestone to level 70.
         </p>
+
+        <div className="loh-spotlight" role="note">
+          <h3>Lord of Hatred — two new classes</h3>
+          <p>
+            <strong>Paladin</strong> and <strong>Warlock</strong> join the roster in Season 13 (April 28,
+            2026). Paladin Oaths unlock automatically at 15; Warlock Soul Shards need the Dry Steppes
+            quest. Both are highlighted below — strong levelers with distinct on-screen fantasies.
+          </p>
+          <div className="loh-spotlight-links">
+            <button
+              type="button"
+              className="ctrl-btn"
+              onClick={() => onPickBuild('paladin-shield-retribution')}
+            >
+              Paladin · Shield Retribution (S)
+            </button>
+            <button type="button" className="ctrl-btn" onClick={() => onPickBuild('warlock-dread-claws')}>
+              Warlock · Dread Claws (A)
+            </button>
+            <button type="button" className="ctrl-btn" onClick={() => onPickBuild('warlock-minion')}>
+              Warlock · Minion (A)
+            </button>
+          </div>
+        </div>
 
         <div className="class-hero-grid">
           {CLASS_ORDER.map((cn) => {
@@ -112,6 +135,7 @@ export function PathsView({ onPickBuild }: Props) {
             </tbody>
           </table>
         </div>
-      </div>    </section>
+      </div>
+    </section>
   )
 }

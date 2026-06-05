@@ -25,4 +25,30 @@ describe('<App> smoke', () => {
     fireEvent.click(screen.getByRole('button', { name: /open command palette/i }))
     expect(await screen.findByRole('dialog', { name: /command palette/i })).toBeInTheDocument()
   })
+
+  it('guide view shows level callout and session strip in footer area', async () => {
+    localStorage.setItem(
+      'd4_loh_guide_v4',
+      JSON.stringify({
+        v: 4,
+        buildId: 'necro-minion',
+        level: 5,
+        view: 'guide',
+        progress: {},
+        notes: {},
+        compare: [],
+        favorites: [],
+        seenOnboarding: true,
+        theme: true,
+      }),
+    )
+    window.location.hash = '#necro-minion/5'
+    render(<App />)
+    expect(await screen.findByRole('tabpanel')).toBeInTheDocument()
+    expect(
+      await screen.findByRole('group', { name: /share and export progress/i }),
+    ).toBeInTheDocument()
+    expect(document.querySelector('.level-callout')).toBeTruthy()
+    expect(await screen.findAllByLabelText(/session progress/i)).toHaveLength(1)
+  })
 })

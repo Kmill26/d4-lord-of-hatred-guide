@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import { useGuideState, clampLevel, parseHash } from './useGuideState'
+import { useGuideState, clampLevel, parseHash, normalizeBuildProgress } from './useGuideState'
+import { BUILDS } from '../data/builds'
+import { MAX_FAVORITES } from '../lib/favorites'
 
 beforeEach(() => {
   localStorage.clear()
@@ -95,5 +97,36 @@ describe('useGuideState', () => {
     expect(result.current.build.id).toBe('rogue-barrage')
     expect(result.current.completed.has(2)).toBe(true)
     expect(result.current.flags.has(4)).toBe(true)
+  })
+
+  it('persists to v4 storage key', () => {
+    const { result } = renderHook(() => useGuideState())
+    act(() => result.current.setView('guide'))
+    expect(localStorage.getItem('d4_loh_guide_v4')).toBeTruthy()
+    expect(localStorage.getItem('d4_loh_guide_v3')).toBeNull()
+  })
+
+  it('toggleFavorite caps at 12 and unfavorite works', () => {
+    const { result } = renderHook(() => useGuideState())
+    const ids = BUILDS.map((b) => b.id).slice(0, MAX_FAVORITES + 1)
+    for (const id of ids.slice(0, MAX_FAVORITES)) {
+      act(() => {
+        expect(result.current.toggleFavorite(id)).toBe(true)
+      })
+    }
+    expect(result.current.favorites).toHaveLength(MAX_FAVORITES)
+    act(() => {
+      expect(result.current.toggleFavorite(ids[MAX_FAVORITES])).toBe(false)
+    })
+    act(() => {
+      expect(result.current.toggleFavorite(ids[0])).toBe(true)
+    })
+    expect(result.current.favorites).not.toContain(ids[0])
+  })
+
+  it('normalizeBuildProgress dedupes and bounds levels', () => {
+    const p = normalizeBuildProgress({ completed: [1, 1, 99, 2.4], flags: [], checks: ['a', 'a'] })
+    expect(p.completed).toEqual([1, 2])
+    expect(p.checks).toEqual(['a'])
   })
 })

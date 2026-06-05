@@ -106,28 +106,100 @@ export interface RespecAdvice {
 }
 
 export const RESPEC_ADVICE: Record<string, RespecAdvice> = {
-  'warlock-dread-claws': {
-    stay: 'Great all-rounder with strong AoE and the best Warlock endgame scaling. Two planned in-build respecs at L34 (Command Fallen + Dark Prison) and L40 (Metamorphosis) — these are tweaks, not a full rebuild.',
-    switch: 'Want it safer/faster? Respec to Minion Warlock. Want the absolute fastest level? Dance of Knives Rogue.',
-  },
-  'paladin-shield-retribution': {
-    stay: 'The fastest, tankiest Paladin leveler — almost all damage comes from Thorns, so it barely cares about your weapon. Swap Shield of Justice → Shield of Retribution at L32.',
-    switch: 'Prefer the Hammerdin fantasy? Blessed Hammer (Disciple). Want flashy melee? Zeal (Zealot).',
-  },
   'rogue-dance-of-knives': {
     stay: 'The fastest leveler in the game. Switch your Specialization from Combo Points to Inner Sight at ~L20 for effortless Core spam.',
     switch: 'Want tankier melee? Twisting Blades. Want the safest ranged option? Barrage.',
   },
-  'necro-minion': {
-    stay: 'The most forgiving leveler — the army does the work. Remember Book of the Dead is free at level 5, not 15.',
-    switch: 'Want to deal the damage yourself? Blood Surge (Overpower AoE) or Blood Lance.',
+  'rogue-twisting-blades': {
+    stay: 'Excellent melee speed with strong boss damage — keep repositioning so blades return through packs. Inner Sight swap ~L20 is the main tuning knob.',
+    switch: 'Want maximum AoE speed? Dance of Knives. Prefer ranged safety? Barrage.',
+  },
+  'rogue-barrage': {
+    stay: 'The safest Rogue leveler — kites at range with steady Barrage spam. Pick up a mobility skill and an imbuement once Energy stabilizes.',
+    switch: 'Want the fastest clear? Dance of Knives. Want more melee punch? Twisting Blades.',
+  },
+  'barb-frenzy-throw': {
+    stay: 'Best Barbarian leveler — ranged hit-and-run Frenzy axe thrower, strong vs trash with Madawc summon and great boss tools via Ancients.',
+    switch: 'Only respec if you hate the throwing playstyle; try Whirlwind (melee) or Hammer of the Ancients (burst).',
+  },
+  'barb-whirlwind': {
+    stay: 'The iconic Barb leveler — spin through packs once Fury and movement are online. Weapon Expertise unlocks around 15 define your damage type.',
+    switch: 'Want a safer ranged route? Frenzy Throw. Want burst on elites? Hammer of the Ancients.',
+  },
+  'barb-hota': {
+    stay: 'Huge burst on elites and bosses — leap in, slam, move on. Slightly slower than Whirlwind in open world but excellent when you can target.',
+    switch: 'Want faster open-world farming? Whirlwind. Want to kite at range? Frenzy Throw.',
   },
   'sorc-static-blizzard': {
     stay: 'The safest caster. The big spike is the Static Field pivot at L38 — it fixes your mana and ramps damage hard.',
     switch: 'Want the strongest season-start damage with zero gear? Charged Bolts. Prefer fire? Firewall/Burn.',
   },
+  'sorc-charged-bolts': {
+    stay: 'Season-start monster — Charged Bolts scales absurdly with zero gear. Keep ranking the skill and pick up a defensive barrier early.',
+    switch: 'Want safer, steadier clears? Static Field + Blizzard. Prefer fire walls? Firewall.',
+  },
+  'sorc-firewall': {
+    stay: 'Strong fire DoT leveling — lay Firewall, walk packs through it, layer Hydra or other fire skills. Mana management matters more than on Charged Bolts.',
+    switch: 'Want the fastest no-gear start? Charged Bolts. Want the safest cold control? Static Field + Blizzard.',
+  },
+  'necro-minion': {
+    stay: 'The most forgiving leveler — the army does the work. Remember Book of the Dead is free at level 5, not 15.',
+    switch: 'Want to deal the damage yourself? Blood Surge (Overpower AoE) or Blood Lance.',
+  },
+  'necro-blood-surge': {
+    stay: 'You are the damage — Blood Surge + Overpower procs delete packs. Keep Fortify and damage reduction temps on gear.',
+    switch: 'Want hands-off leveling? Minion Necro. Prefer single-target spears? Blood Lance.',
+  },
+  'necro-blood-lance': {
+    stay: 'High single-target burst — stack Blood Orbs and spike bosses with Blood Lance. Slower AoE than Surge but excellent for focused damage.',
+    switch: 'Want easier open-world farming? Minion or Blood Surge. Want the safest route? Minion.',
+  },
+  'paladin-shield-retribution': {
+    stay: 'The fastest, tankiest Paladin leveler — almost all damage comes from Thorns, so it barely cares about your weapon. Swap Shield of Justice → Shield of Retribution at L32.',
+    switch: 'Prefer the Hammerdin fantasy? Blessed Hammer (Disciple). Want flashy melee? Zeal (Zealot).',
+  },
+  'paladin-blessed-hammer': {
+    stay: 'Classic Hammerdin — orbiting hammers with strong AoE once Faith flows. Disciple Oath / Arbiter windows spike damage later.',
+    switch: 'Want the fastest Paladin level? Shield Retribution (Thorns). Want pure melee? Zeal.',
+  },
+  'paladin-zeal': {
+    stay: 'Melee crusader — Zeal chains on single targets with holy/fire bursts. Tankier than Rogue but slower in huge packs.',
+    switch: 'Want Thorns AFK farming? Shield Retribution. Want ranged-style AoE? Blessed Hammer.',
+  },
+  'warlock-dread-claws': {
+    stay: 'Great all-rounder with strong AoE and the best Warlock endgame scaling. Two planned in-build respecs at L34 (Command Fallen + Dark Prison) and L40 (Metamorphosis) — these are tweaks, not a full rebuild.',
+    switch: 'Want it safer/faster? Respec to Minion Warlock. Want the absolute fastest level? Dance of Knives Rogue.',
+  },
+  'warlock-minion': {
+    stay: 'Safer Warlock leveling — lesser demons and a Greater Demon carry fights while you apply hexes. Soul Shard quest at 15 is mandatory.',
+    switch: 'Want more personal damage and AoE? Dread Claws. Want burst melee? Eviscerate.',
+  },
+  'warlock-eviscerate': {
+    stay: 'Aggressive melee Warlock — Eviscerate and demon repositioning for burst. More active than Minion but less screen-wide than Dread Claws.',
+    switch: 'Want the safest Warlock route? Minion. Want the best endgame scaling? Dread Claws.',
+  },
   'spiritborn-quill-volley': {
     stay: 'The best Spiritborn leveler — take Eagle as both your primary (15) and secondary (30) Spirit Hall. No mid-leveling respec needed.',
     switch: 'Prefer melee slams? Crushing Hand. Like counter-attacks? Payback (Eagle/Jaguar).',
+  },
+  'spiritborn-crushing-hand': {
+    stay: 'Melee slam leveling — Gorilla Spirit Hall for armor and big slams. Slower than Quill Volley but very sturdy.',
+    switch: 'Want fastest Spiritborn XP? Quill Volley (Eagle). Want reactive melee? Payback.',
+  },
+  'spiritborn-payback': {
+    stay: 'Counter-attack bruiser — Eagle/Jaguar spirits reward getting hit and striking back. Strong when you understand pack timing.',
+    switch: 'Want easiest ranged farming? Quill Volley. Want straightforward slams? Crushing Hand.',
+  },
+  'druid-lightning-storm': {
+    stay: 'Steady caster Druid — Lightning Storm ticks while you move; pair with mobility and a defensive skill. Good all-round AoE.',
+    switch: 'Want simpler melee? Pulverize. Want shapeshift speed? Shred (Werewolf).',
+  },
+  'druid-pulverize': {
+    stay: 'Straightforward melee bear — slam packs with Pulverize and tank through. Fewer moving parts than Storm or Shred.',
+    switch: 'Want ranged-safe farming? Lightning Storm. Want faster movement? Shred.',
+  },
+  'druid-shred': {
+    stay: 'Fast werewolf leveling — dash between packs with Shred and bleed. More active than Storm but excellent clear speed.',
+    switch: 'Want calmer ranged play? Lightning Storm. Want heavy slams? Pulverize.',
   },
 }

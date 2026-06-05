@@ -3,6 +3,7 @@ import { BUILD_BY_ID } from '../../data/builds'
 import { CLASS_ORDER } from '../../data/classes'
 import { TIER_LIST, TIER_LIST_NOTE, TIER_ORDER } from '../../data/tierList'
 import { BUILD_STYLE } from '../../data/finder'
+import { TIER_LIST_SOURCES } from '../../data/sources'
 import type { ClassName } from '../../data/types'
 
 interface Props {
@@ -81,6 +82,26 @@ export function TierListView({ currentBuildId, onPickBuild }: Props) {
             )
           })}
         </div>
+
+        <details className="sources-block" style={{ marginTop: '2rem' }}>
+          <summary className="section-title" style={{ fontSize: '1rem', cursor: 'pointer' }}>
+            Sources & methodology
+          </summary>
+          <p className="section-intro" style={{ marginTop: '0.5rem' }}>
+            Rankings reflect leveling speed to 70 at season start with no gear. Maxroll ranks individual
+            builds; Icy Veins and Mobalytics often rank whole classes — notes on chips call out
+            disagreements.
+          </p>
+          <ul className="sources-list">
+            {TIER_LIST_SOURCES.map((src) => (
+              <li key={src.url}>
+                <a href={src.url} target="_blank" rel="noopener noreferrer">
+                  {src.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
       </div>
     </section>
   )

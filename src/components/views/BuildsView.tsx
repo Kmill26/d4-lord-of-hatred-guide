@@ -2,21 +2,35 @@ import { useMemo, useState, type CSSProperties } from 'react'
 import { BUILDS } from '../../data/builds'
 import { CLASSES, CLASS_ORDER } from '../../data/classes'
 import { byTier } from '../../data/tierList'
+import { favoriteCap } from '../../lib/favorites'
 import { ClassPortrait, TierBadge } from '../shared'
 
 interface Props {
   onPickBuild: (id: string) => void
   compare: string[]
   onToggleCompare: (id: string) => void
+  favorites: string[]
+  isFavorite: (id: string) => boolean
+  onToggleFavorite: (id: string) => boolean
 }
 
-export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
+export function BuildsView({
+  onPickBuild,
+  compare,
+  onToggleCompare,
+  favorites,
+  isFavorite,
+  onToggleFavorite,
+}: Props) {
   const [query, setQuery] = useState('')
   const [classFilter, setClassFilter] = useState<'all' | string>('all')
+  const [favOnly, setFavOnly] = useState(false)
+  const [favNotice, setFavNotice] = useState('')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return BUILDS.filter((b) => {
+      if (favOnly && !favorites.includes(b.id)) return false
       if (classFilter !== 'all' && b.className !== classFilter) return false
       if (!q) return true
       const hay = `${b.className} ${b.name} ${b.playstyle} ${b.feelsLike} ${b.tierLabel} ${
@@ -24,7 +38,7 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
       } ${b.skillPriority.join(' ')}`.toLowerCase()
       return hay.includes(q)
     }).sort(byTier)
-  }, [query, classFilter])
+  }, [query, classFilter, favOnly, favorites])
 
   return (
     <section className="view" id="view-panel" role="tabpanel" aria-labelledby="tab-builds" tabIndex={-1}>
@@ -33,6 +47,12 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
         <p className="section-intro" style={{ margin: '-0.5rem 0 1rem' }}>
           {BUILDS.length} builds across all 8 classes. Click any card for the full point-by-point guide.
         </p>
+
+        {favNotice && (
+          <p className="fav-notice builds-fav-notice" role="status" aria-live="polite">
+            {favNotice}
+          </p>
+        )}
 
         <div className="build-toolbar">
           <input
@@ -54,6 +74,15 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            className={`filter-chip ${favOnly ? 'on' : ''}`}
+            aria-pressed={favOnly}
+            onClick={() => setFavOnly((v) => !v)}
+            title="Show only starred builds"
+          >
+            ★ Favorites{favorites.length ? ` (${favorites.length})` : ''}
+          </button>
         </div>
 
         {filtered.length === 0 ? (
@@ -69,6 +98,7 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
               onClick={() => {
                 setQuery('')
                 setClassFilter('all')
+                setFavOnly(false)
               }}
             >
               Clear search &amp; filters
@@ -100,6 +130,22 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
                     </button>
                     <button
                       type="button"
+                      className={`card-fav ${isFavorite(b.id) ? 'on' : ''}`}
+                      aria-pressed={isFavorite(b.id)}
+                      aria-label={isFavorite(b.id) ? 'Remove from favorites' : 'Add to favorites'}
+                      onClick={() => {
+                        const msg = favoriteCap(isFavorite(b.id), b.id, onToggleFavorite)
+                        if (msg) {
+                          setFavNotice(msg)
+                          window.setTimeout(() => setFavNotice(''), 3000)
+                        }
+                      }}
+                      title="Star this build"
+                    >
+                      {isFavorite(b.id) ? '★ Saved' : '☆ Save'}
+                    </button>
+                    <button
+                      type="button"
                       className={`card-cmp ${inCompare ? 'on' : ''}`}
                       aria-pressed={inCompare}
                       onClick={() => onToggleCompare(b.id)}
@@ -113,6 +159,7 @@ export function BuildsView({ onPickBuild, compare, onToggleCompare }: Props) {
             })}
           </div>
         )}
-      </div>    </section>
+      </div>
+    </section>
   )
 }

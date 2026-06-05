@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BUILDS } from '../data/builds'
 import { GLOSSARY } from '../data/glossary'
 import { LEVEL_CAP } from '../data/builds'
+import { FINDER_QUESTIONS } from '../data/finder'
 import { fuzzyMatch, fuzzySegments } from '../lib/fuzzy'
 import type { GuideState } from '../hooks/useGuideState'
 import { TABS } from './tabs'
@@ -21,7 +22,6 @@ interface Props {
   onOpenFinder: () => void
 }
 
-/** Mount only while open — parent unmounts to reset query/selection state. */
 export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }: Props) {
   const [query, setQuery] = useState('')
   const [sel, setSel] = useState(0)
@@ -33,65 +33,80 @@ export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }:
     onClose()
   }
 
-  // The command universe. Built inline each render (≈85 cheap objects) so the
-  // `run` closures always hold the current onClose/handler props — no stale
-  // closures, no dependency bookkeeping.
-  const base: Cmd[] = (() => {
-    const cmds: Cmd[] = []
-    for (const t of TABS) {
-      cmds.push({
-        id: `view:${t.id}`,
-        kind: 'Go to',
-        title: t.label,
-        subtitle: 'Section',
-        run: go(() => state.setView(t.id)),
-      })
-    }
-    cmds.push({
-      id: 'action:finder',
-      kind: 'Action',
-      title: 'Find my build…',
-      subtitle: 'Answer 3 questions',
-      run: go(onOpenFinder),
-    })
-    cmds.push({
-      id: 'action:compare',
-      kind: 'Action',
-      title: 'Compare builds',
-      subtitle: 'Side by side',
-      run: go(() => state.setView('compare')),
-    })
-    cmds.push({
-      id: 'action:theme',
-      kind: 'Action',
-      title: state.theme ? 'Turn off class theming' : 'Turn on class theming',
-      subtitle: 'Tint the UI by class',
-      run: go(() => state.setTheme(!state.theme)),
-    })
-    for (const b of BUILDS) {
-      cmds.push({
-        id: `build:${b.id}`,
+  const { pinned, searchable } = useMemo(() => {
+    const favSet = new Set(state.favorites)
+    const tabCmds: Cmd[] = TABS.map((t) => ({
+      id: `view:${t.id}`,
+      kind: 'Go to',
+      title: t.label,
+      subtitle: 'Section',
+      run: go(() => state.setView(t.id)),
+    }))
+    const actions: Cmd[] = [
+      {
+        id: 'action:finder',
+        kind: 'Action',
+        title: 'Find my build…',
+        subtitle: `Answer ${FINDER_QUESTIONS.length} questions`,
+        run: go(onOpenFinder),
+      },
+      {
+        id: 'action:compare',
+        kind: 'Action',
+        title: 'Compare builds',
+        subtitle: 'Side by side',
+        run: go(() => state.setView('compare')),
+      },
+      {
+        id: 'action:theme',
+        kind: 'Action',
+        title: state.theme ? 'Turn off class theming' : 'Turn on class theming',
+        subtitle: 'Tint the UI by class',
+        run: go(() => state.setTheme(!state.theme)),
+      },
+      {
+        id: 'action:export',
+        kind: 'Action',
+        title: 'Open Point Guide',
+        subtitle: 'Share link & JSON export are in the guide footer',
+        run: go(() => state.setView('guide')),
+      },
+    ]
+    const favCmds: Cmd[] = []
+    for (const id of state.favorites) {
+      const b = BUILDS.find((x) => x.id === id)
+      if (!b) continue
+      favCmds.push({
+        id: `fav:${b.id}`,
         kind: 'Build',
-        title: `${b.className} — ${b.name}`,
-        subtitle: `${b.tier}-tier · ${b.feelsLike}`,
+        title: `★ ${b.className} — ${b.name}`,
+        subtitle: 'Favorite build',
         run: go(() => state.selectBuild(b.id, { view: 'guide' })),
       })
     }
-    for (const t of GLOSSARY) {
-      cmds.push({
-        id: `term:${t.term}`,
-        kind: 'Term',
-        title: t.term,
-        subtitle: t.short,
-        run: go(() => onOpenGlossary(t.term)),
-      })
+    const buildCmds: Cmd[] = BUILDS.filter((b) => !favSet.has(b.id)).map((b) => ({
+      id: `build:${b.id}`,
+      kind: 'Build',
+      title: `${b.className} — ${b.name}`,
+      subtitle: `${b.tier}-tier · ${b.feelsLike}`,
+      run: go(() => state.selectBuild(b.id, { view: 'guide' })),
+    }))
+    const termCmds: Cmd[] = GLOSSARY.map((t) => ({
+      id: `term:${t.term}`,
+      kind: 'Term',
+      title: t.term,
+      subtitle: t.short,
+      run: go(() => onOpenGlossary(t.term)),
+    }))
+    return {
+      pinned: [...favCmds.slice(0, 4), ...actions, ...tabCmds],
+      searchable: [...tabCmds, ...actions, ...favCmds, ...buildCmds, ...termCmds],
     }
-    return cmds
-  })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- go() recreated each render; closures use latest props
+  }, [state, onClose, onOpenFinder, onOpenGlossary])
 
   const results: Cmd[] = (() => {
     const q = query.trim()
-    // Dynamic "go to level N" command.
     const dyn: Array<{ cmd: Cmd; score: number }> = []
     const levelMatch = q.match(/(?:level|lvl|l)?\s*(\d{1,2})/i)
     if (levelMatch) {
@@ -111,13 +126,12 @@ export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }:
       })
     }
     if (!q) {
-      return [...dyn.map((d) => d.cmd), ...base.slice(0, 8)]
+      return [...dyn.map((d) => d.cmd), ...pinned.slice(0, 14)]
     }
     const scored: Array<{ cmd: Cmd; score: number }> = [...dyn]
-    for (const cmd of base) {
+    for (const cmd of searchable) {
       const m =
-        fuzzyMatch(q, cmd.title) ??
-        (cmd.subtitle ? fuzzyMatch(q, cmd.subtitle) : null)
+        fuzzyMatch(q, cmd.title) ?? (cmd.subtitle ? fuzzyMatch(q, cmd.subtitle) : null)
       if (m) scored.push({ cmd, score: m.score })
     }
     scored.sort((a, b) => b.score - a.score)
@@ -129,7 +143,6 @@ export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }:
     return () => cancelAnimationFrame(id)
   }, [])
 
-  // Keep the active option scrolled into view.
   useEffect(() => {
     const el = listRef.current?.querySelector<HTMLElement>(`[data-idx="${sel}"]`)
     el?.scrollIntoView({ block: 'nearest' })
@@ -161,7 +174,9 @@ export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }:
         onClick={(e) => e.stopPropagation()}
       >
         <div className="cmdk-input-row">
-          <span className="cmdk-prompt" aria-hidden="true">⌘K</span>
+          <span className="cmdk-prompt" aria-hidden="true">
+            ⌘K
+          </span>
           <input
             ref={inputRef}
             className="cmdk-input"
@@ -208,9 +223,16 @@ export function CommandPalette({ onClose, state, onOpenGlossary, onOpenFinder }:
           })}
         </div>
         <div className="cmdk-foot">
-          <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-          <span><kbd>↵</kbd> open</span>
-          <span><kbd>esc</kbd> close</span>
+          <span>
+            <kbd>↑</kbd>
+            <kbd>↓</kbd> navigate
+          </span>
+          <span>
+            <kbd>↵</kbd> open
+          </span>
+          <span>
+            <kbd>esc</kbd> close
+          </span>
         </div>
       </div>
     </div>

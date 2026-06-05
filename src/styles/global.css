@@ -1023,6 +1023,107 @@ kbd {
 .chip-style { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--faint); margin-left: 0.4rem; }
 .tier-empty { color: var(--faint); padding: 0.35rem; }
 
+/* --- Level callouts, session strip, export, favorites -------------------- */
+.level-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 1100px;
+  margin: 0 auto 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+  background: rgba(18, 14, 12, 0.85);
+}
+.callout-kind {
+  flex-shrink: 0;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.callout-kind.k-milestone { color: var(--gold-bright); border-color: rgba(212, 175, 55, 0.5); }
+.callout-kind.k-mechanic { color: #b89ae8; border-color: rgba(155, 111, 212, 0.45); }
+.callout-kind.k-route { color: var(--tier-a); }
+.callout-kind.k-activity { color: var(--tier-s); }
+.callout-kind.k-difficulty { color: var(--gold); }
+.callout-title { display: block; color: var(--gold); margin-bottom: 0.2rem; }
+.callout-body { margin: 0; font-size: 0.88rem; line-height: 1.4; color: var(--muted-warm); }
+
+.session-strip {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-top: 1px solid var(--line);
+  background: rgba(9, 8, 7, 0.75);
+}
+.session-chip {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  color: var(--faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.footer-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+.export-menu { display: flex; gap: 0.35rem; }
+.export-err { border-color: var(--red) !important; color: var(--red) !important; }
+.export-err-msg { max-width: 12rem; font-size: 0.72rem; color: var(--red); }
+
+.fav-btn,
+.card-fav {
+  padding: 0.2rem 0.45rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.card-fav { padding: 0.35rem 0.55rem; font-size: 0.78rem; }
+.fav-btn.on,
+.card-fav.on { color: var(--gold-bright); border-color: var(--gold); }
+.fav-btn:hover,
+.card-fav:hover { border-color: var(--gold); color: var(--gold); }
+.fav-notice { max-width: 10rem; font-size: 0.68rem; color: var(--gold); }
+.builds-fav-notice { text-align: center; margin: 0 0 0.75rem; }
+
+.loh-spotlight {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(155, 111, 212, 0.12), rgba(212, 175, 55, 0.1));
+}
+.loh-spotlight h3 {
+  margin: 0 0 0.5rem;
+  font-family: Cinzel, serif;
+  font-size: 1rem;
+  color: var(--gold);
+}
+.loh-spotlight p { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--muted-warm); }
+.loh-spotlight-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.sources-list { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+.sources-list li { margin-bottom: 0.35rem; }
+.sources-block summary { list-style: none; cursor: pointer; }
+.sources-block summary::-webkit-details-marker { display: none; }
+
 /* --- Class accent theming (opt-in) --------------------------------------- */
 .hud.themed .topbar { border-bottom-color: var(--class-accent); }
 .hud.themed .nav-tab[aria-selected='true'] { border-color: var(--class-accent); box-shadow: 0 0 12px var(--class-accent); }
@@ -1040,6 +1141,10 @@ kbd {
   .nav-tabs { scroll-snap-type: x proximity; }
   .nav-tab { scroll-snap-align: start; }
   .topbar-tools { gap: 0.3rem; }
+  .footer-right { justify-content: center; width: 100%; }
+  .export-menu .ctrl-btn { padding: 0.3rem 0.45rem; font-size: 0.72rem; }
+  .level-callout { flex-direction: column; }
+  .loh-spotlight-links .ctrl-btn { font-size: 0.72rem; }
 }
 
 @media print {
@@ -1056,3 +1161,4 @@ kbd {
   .quickref-table, .quickref-table * { color: #000 !important; }
   .quickref-table tbody tr { break-inside: avoid; }
 }
+
