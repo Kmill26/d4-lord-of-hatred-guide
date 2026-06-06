@@ -27,11 +27,19 @@ const MIME = {
 function startServer() {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
-      let urlPath = decodeURIComponent((req.url || '/').split('?')[0])
+      let urlPath = (req.url || '/').split('?')[0]
+      try {
+        urlPath = decodeURIComponent(urlPath)
+      } catch {
+        res.writeHead(400)
+        res.end('Bad request')
+        return
+      }
       if (urlPath === '/' || urlPath === '') urlPath = '/index.html'
-      const filePath = path.join(DIST, path.normalize(urlPath))
-      // Prevent path traversal outside dist.
-      if (!filePath.startsWith(DIST)) {
+      const normalized = path.normalize(urlPath).replace(/^(\.\.[\/\\])+/, '')
+      const filePath = path.join(DIST, normalized)
+      // Robust prevent path traversal outside dist (after normalize, check prefix and no ..).
+      if (!filePath.startsWith(DIST) || normalized.includes('..')) {
         res.writeHead(403)
         res.end('Forbidden')
         return
@@ -65,13 +73,8 @@ function startServer() {
 
 async function createWindow() {
   let url = 'about:blank'
-  try {
-    const port = await startServer()
-    url = `http://127.0.0.1:${port}/`
-  } catch {
-    // Fall back to loading the file directly if the server failed to start.
-    url = `file://${path.join(DIST, 'index.html')}`
-  }
+  const port = await startServer()
+  url = `http://127.0.0.1:${port}/`
 
   const win = new BrowserWindow({
     width: 1200,
@@ -91,6 +94,13 @@ async function createWindow() {
   win.webContents.setWindowOpenHandler(({ url: target }) => {
     if (/^https?:/.test(target)) shell.openExternal(target)
     return { action: 'deny' }
+  })
+
+  // Prevent in-app navigation to non-local (defense for packaged app).
+  win.webContents.on('will-navigate', (e, navUrl) => {
+    if (!navUrl.startsWith('http://127.0.0.1')) {
+      e.preventDefault()
+    }
   })
 
   win.loadURL(url)

@@ -2,13 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CLASSES } from '../../data/classes'
 import { LEVEL_CAP } from '../../data/builds'
 import { buildLevelRows, levelRowText } from '../../lib/leveling'
-import { copyText } from '../../lib/exportProgress'
 import type { GuideState, ViewId } from '../../hooks/useGuideState'
 import { ClassPortrait, MetersBars, RunewordList } from '../shared'
-import { GuideDossier } from '../GuideDossier'
-import { LevelCallout } from '../LevelCallout'
 import { SessionStrip } from '../SessionStrip'
-import { ExportMenu } from '../ExportMenu'
 
 interface Props {
   state: GuideState
@@ -17,8 +13,7 @@ interface Props {
 }
 
 export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
-  const { build, level, completed, flags, checks, advance, goToLevel, toggleFlag, toggleCheck, getNote, setNote } =
-    state
+  const { build, level, completed, flags, advance, goToLevel, toggleFlag } = state
   const cls = CLASSES[build.className]
   const rows = useMemo(() => buildLevelRows(build), [build])
   const current = rows[level - 1] ?? rows[0]
@@ -85,10 +80,12 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
   }, [reducedMotion])
 
   const copyCurrent = async () => {
-    const ok = await copyText(levelRowText(current))
-    if (ok) {
+    try {
+      await navigator.clipboard?.writeText(levelRowText(current))
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1200)
+    } catch {
+      /* clipboard unavailable */
     }
   }
 
@@ -117,8 +114,6 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
         <div className="sr-only" role="status" aria-live="polite">
           Level {level}: {current.skill}. {current.note}
         </div>
-
-        <LevelCallout level={level} build={build} />
 
         <div className="guide-layout">
           {/* What this build looks like */}
@@ -209,16 +204,6 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
             </div>
           </div>
         </div>
-
-        <GuideDossier
-          build={build}
-          level={level}
-          checks={checks}
-          toggleCheck={toggleCheck}
-          getNote={getNote}
-          setNote={setNote}
-          goToLevel={goToLevel}
-        />
       </div>
 
       {listOpen && (
@@ -290,7 +275,6 @@ export function GuideView({ state, reducedMotion, onSwitchView }: Props) {
           </button>
         </div>
         <div className="footer-right">
-          <ExportMenu state={state} />
           <button
             type="button"
             className="ctrl-btn"

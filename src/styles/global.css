@@ -1072,6 +1072,7 @@ kbd {
   border: 1px solid var(--line);
   border-radius: 999px;
 }
+.session-chip .progress-pct { font-size: 0.9em; opacity: 0.85; }
 
 .footer-right {
   display: flex;
@@ -1162,3 +1163,206 @@ kbd {
   .quickref-table tbody tr { break-inside: avoid; }
 }
 
+
+/* ============================================================================
+   ATMOSPHERE & TACTILITY PASS — 2026-06-05
+   Purely additive, presentation-only. Adds depth, hearth-light, and tactile
+   feedback on top of the existing gold/blood HUD. Every animation below
+   degrades to a static frame under prefers-reduced-motion via the global
+   guard near the top of this file, so motion-sensitive users lose nothing.
+   ============================================================================ */
+
+/* Establish a stacking context on the shell so the two decorative layers can
+   sit *behind* all content without an extra DOM node. Direct children are
+   lifted to z-index 1; the topbar keeps its own higher index. */
+.hud { isolation: isolate; }
+.hud > * { position: relative; z-index: 1; }
+
+/* Layer 1 — warm hearth glow + a slow drift of stray embers (lightening). */
+.hud::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 50% -12%, rgba(212, 175, 55, 0.16), transparent 55%),
+    radial-gradient(95% 90% at 50% 116%, rgba(201, 52, 44, 0.18), transparent 60%),
+    radial-gradient(2px 2px at 22% 78%, rgba(240, 193, 119, 0.55), transparent 60%),
+    radial-gradient(1.5px 1.5px at 68% 58%, rgba(240, 193, 119, 0.42), transparent 60%),
+    radial-gradient(1.5px 1.5px at 42% 40%, rgba(212, 175, 55, 0.36), transparent 60%),
+    radial-gradient(2px 2px at 84% 30%, rgba(240, 193, 119, 0.46), transparent 60%),
+    radial-gradient(1px 1px at 55% 22%, rgba(255, 226, 168, 0.45), transparent 60%);
+  mix-blend-mode: screen;
+  animation: hud-drift 30s ease-in-out infinite alternate;
+}
+@keyframes hud-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -24px, 0); }
+}
+
+/* Layer 2 — edge vignette + a whisper of film grain (darkening). Keeps the
+   center crisp and pulls focus inward like a lit reliquary. */
+.hud::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.92;
+  background:
+    radial-gradient(145% 120% at 50% 44%, transparent 50%, rgba(0, 0, 0, 0.62) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* --- Themed scrollbars (big win inside the Electron shell) ---------------- */
+* { scrollbar-width: thin; scrollbar-color: rgba(142, 32, 36, 0.85) transparent; }
+*::-webkit-scrollbar { width: 11px; height: 11px; }
+*::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.28); }
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6b1619, #3a0f11);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--red), var(--blood)); }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+/* --- Brand: a slow gilt shimmer sweeps the wordmark ---------------------- */
+.brand {
+  background: linear-gradient(100deg, var(--gold) 0%, var(--gold) 38%, var(--gold-bright) 50%, var(--gold) 62%, var(--gold) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brand-shimmer 7s ease-in-out infinite;
+}
+@keyframes brand-shimmer {
+  0%, 100% { background-position: 120% 0; }
+  50%      { background-position: -20% 0; }
+}
+/* Keep the red separator visible through the clipped text. */
+.brand .sep { -webkit-text-fill-color: var(--red); }
+
+/* --- Topbar: the gold rule gets a faint living sheen --------------------- */
+.topbar { border-bottom: none; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7); }
+.topbar::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold) 18%, var(--gold-bright) 50%, var(--gold) 82%, transparent);
+  background-size: 200% 100%;
+  animation: rule-sheen 9s linear infinite;
+}
+@keyframes rule-sheen { to { background-position: -200% 0; } }
+
+/* Anchor the sheen to the bar and restore the topbar's stacking order
+   (the `.hud > *` lift above reset it to 1). */
+.topbar { position: relative; z-index: 30; }
+
+/* --- Nav tabs: lift on hover, a breathing underline when selected -------- */
+.nav-tab { position: relative; transition: color 0.12s ease, border-color 0.12s ease, transform 0.12s ease, background 0.12s ease; }
+.nav-tab:hover { transform: translateY(-1px); }
+.nav-tab[aria-selected='true'] { transform: translateY(-1px); }
+.nav-tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 28%; right: 28%; bottom: -3px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+  animation: tab-glow 2.6s ease-in-out infinite;
+}
+@keyframes tab-glow {
+  0%, 100% { opacity: 0.45; left: 28%; right: 28%; }
+  50%      { opacity: 1;    left: 14%; right: 14%; }
+}
+
+/* --- The hero level card: an ambient aura + a blade of light on the CTA -- */
+.next-card { transition: box-shadow 0.3s ease; }
+.next-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 5px;
+  box-shadow: inset 0 0 60px rgba(142, 32, 36, 0.28);
+  animation: card-breathe 6.5s ease-in-out infinite;
+}
+@keyframes card-breathe {
+  0%, 100% { box-shadow: inset 0 0 55px rgba(142, 32, 36, 0.22); }
+  50%      { box-shadow: inset 0 0 80px rgba(142, 32, 36, 0.40); }
+}
+
+.action-btn { position: relative; overflow: hidden; transition: transform 0.1s ease, background 0.1s ease, box-shadow 0.2s ease; }
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 240, 200, 0.45), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.55s ease;
+}
+.action-btn:hover::before { left: 130%; }
+.action-btn:hover { box-shadow: 0 14px 42px rgba(142, 32, 36, 0.7), 0 0 26px rgba(212, 175, 55, 0.3); }
+.action-btn:active { transform: translateY(0) scale(0.985); }
+
+.milestone-badge { box-shadow: 0 0 16px rgba(201, 52, 44, 0.55); }
+
+/* --- Section headings: gilt gradient with an engraved edge --------------- */
+.section-title {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold) 65%, #a8842a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* --- Cards: smoother, accent-aware lift on hover ------------------------- */
+.class-hero, .class-card, .system-card, .glossary-card, .merc-card, .activity-card, .finder-result, .finder-option {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+.class-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent, var(--gold));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 22px color-mix(in srgb, var(--accent, var(--gold)) 30%, transparent);
+}
+.class-card::before { transition: box-shadow 0.16s ease; }
+.class-card:hover::before { box-shadow: 0 0 14px var(--accent, var(--gold)); }
+.system-card:hover, .merc-card:hover, .activity-card:hover, .glossary-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Level pill: the number carries a soft gold glow --------------------- */
+.level-pill .num { text-shadow: 0 0 14px rgba(212, 175, 55, 0.55); }
+
+/* --- Command palette: selected row gets a gold spine -------------------- */
+.cmdk-item { transition: background 0.1s ease, border-color 0.1s ease; }
+.cmdk-item.sel { box-shadow: inset 3px 0 0 var(--gold); }
+
+/* --- Tier list: "you are here" chip pulses gently ----------------------- */
+.tier-chip.you { animation: you-pulse 2.4s ease-in-out infinite; }
+@keyframes you-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(212, 175, 55, 0.22); }
+  50%      { box-shadow: 0 0 16px rgba(212, 175, 55, 0.5); }
+}
+
+/* --- Loading rune: gilded, not just spinning ---------------------------- */
+.loading-rune { color: var(--gold-bright); text-shadow: 0 0 18px rgba(212, 175, 55, 0.6); }
+
+/* --- Ctrl buttons + chips: a hair of tactile press ---------------------- */
+.ctrl-btn, .filter-chip, .card-open, .build-pick, .tier-chip, .see-also-chip, .check-jump {
+  transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease, transform 0.08s ease;
+}
+.ctrl-btn:active, .filter-chip:active, .card-open:active, .build-pick:active, .tier-chip:active { transform: translateY(1px); }
+
+/* Honor the global reduced-motion contract for the new ambient layers too. */
+@media (prefers-reduced-motion: reduce) {
+  .hud::before { animation: none; }
+  .topbar::after, .nav-tab[aria-selected='true']::after, .next-card::after,
+  .tier-chip.you, .brand { animation: none; }
+  .brand { background-position: 0 0; }
+}

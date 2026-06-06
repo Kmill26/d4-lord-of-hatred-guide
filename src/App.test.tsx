@@ -45,10 +45,6 @@ describe('<App> smoke', () => {
     window.location.hash = '#necro-minion/5'
     render(<App />)
     expect(await screen.findByRole('tabpanel')).toBeInTheDocument()
-    expect(
-      await screen.findByRole('group', { name: /share and export progress/i }),
-    ).toBeInTheDocument()
-    expect(document.querySelector('.level-callout')).toBeTruthy()
     expect(await screen.findAllByLabelText(/session progress/i)).toHaveLength(1)
   })
 })

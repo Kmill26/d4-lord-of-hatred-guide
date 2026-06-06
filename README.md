@@ -11,7 +11,7 @@ respec advisor.
 
 - **Command palette (`⌘K` / `Ctrl-K`)** — fuzzy-jump to any build, section, level (“level
   38”), or glossary term. Pins up to **4 favorite builds**, then actions and tabs.
-- **Build finder** — answer three questions and get your best-matched builds; pops on first
+- **Build finder** — answer a few quick questions and get your best-matched builds; pops on first
   visit and is always a click away.
 - **Class Guide** — what each of the 8 classes looks like to play, with **Paladin** and
   **Warlock** spotlight quick-starts on the Paths view.
@@ -26,7 +26,7 @@ respec advisor.
   Wowhead, Mobalytics).
 - **Route** — Season 13 route (Skovos), difficulty/XP ladder, leveling activities, mercenaries.
 - **What's New** — Lord of Hatred systems that matter for leveling.
-- **Glossary** — **50** fact-checked Diablo IV terms, searchable and cross-linked.
+- **Glossary** — **54** fact-checked Diablo IV terms, searchable and cross-linked.
 - **Respec** — build-aware stay/switch advice for all **24** builds.
 
 ### Progress & persistence
